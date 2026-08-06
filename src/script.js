@@ -34,6 +34,9 @@ const translations = {
     nameLabel: "이름",
     urlLabel: "URL",
     themeTitle: "테마 변경",
+    bgColorTitle: "배경색 변경",
+    bgColorLabel: "배경색",
+    bgColorReset: "테마 기본값",
     imgSearchTitle: "이미지 검색",
     aiModeTitle: "AI 검색 모드",
     menuEdit: "수정",
@@ -53,6 +56,9 @@ const translations = {
     nameLabel: "Name",
     urlLabel: "URL",
     themeTitle: "Toggle Theme",
+    bgColorTitle: "Change background color",
+    bgColorLabel: "Background",
+    bgColorReset: "Theme default",
     imgSearchTitle: "Image Search",
     aiModeTitle: "AI Search Mode",
     menuEdit: "Edit",
@@ -72,6 +78,7 @@ let lastPageSwitchTime = 0; // 페이지 전환 쿨타임 체크용
 document.addEventListener("DOMContentLoaded", () => {
   applyLocalization();
   initTheme();
+  initBgColor();
   updateClock();
   setInterval(updateClock, 1000);
   initShortcuts();
@@ -118,6 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function applyLocalization() {
   document.getElementById("searchInput").placeholder = t.searchPlaceholder;
   document.getElementById("themeToggle").title = t.themeTitle;
+  document.getElementById("bgColorToggle").title = t.bgColorTitle;
+  document.getElementById("bgColorLabel").textContent = t.bgColorLabel;
+  document.getElementById("bgColorReset").textContent = t.bgColorReset;
   document.getElementById("imageSearchBtn").title = t.imgSearchTitle;
   document.getElementById("aiModeBtn").title = t.aiModeTitle;
   document.querySelector('#addModal label[for="modalTitle"]').textContent =
@@ -153,15 +163,85 @@ function initTheme() {
   updateThemeIcon(savedTheme);
   document.getElementById("themeToggle").addEventListener("click", () => {
     const current = document.body.getAttribute("data-theme");
-    const next = current === "dark" ? "light" : "dark";
-    document.body.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-    updateThemeIcon(next);
+    setPalette(current === "dark" ? "light" : "dark");
   });
+}
+function setPalette(theme) {
+  document.body.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+  updateThemeIcon(theme);
 }
 function updateThemeIcon(theme) {
   document.querySelector("#themeToggle span").textContent =
     theme === "dark" ? "light_mode" : "dark_mode";
+}
+
+/* --- 배경색 커스터마이즈 --- */
+const BG_COLOR_KEY = "bgColor";
+
+// 배경색의 상대 밝기로 밝은 색 여부 판단 (텍스트 대비 자동 선택용)
+function isLightColor(hex) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55;
+}
+
+// "rgb(36, 37, 38)" → "#242526" (컬러 피커 초기값 동기화용)
+function rgbToHex(rgb) {
+  const m = rgb.match(/\d+/g);
+  if (!m || m.length < 3) return null;
+  return "#" + m.slice(0, 3).map((n) => Number(n).toString(16).padStart(2, "0")).join("");
+}
+
+function initBgColor() {
+  const toggle = document.getElementById("bgColorToggle");
+  const popover = document.getElementById("bgColorPopover");
+  const input = document.getElementById("bgColorInput");
+  const reset = document.getElementById("bgColorReset");
+
+  const syncInputToCurrentBg = () => {
+    const hex = rgbToHex(getComputedStyle(document.body).backgroundColor);
+    if (hex) input.value = hex;
+  };
+
+  // 저장된 커스텀 색이 있으면 --bg-color를 인라인으로 덮어씀 (테마 변수보다 우선)
+  const saved = localStorage.getItem(BG_COLOR_KEY);
+  if (saved) {
+    document.body.style.setProperty("--bg-color", saved);
+    input.value = saved;
+  } else {
+    syncInputToCurrentBg();
+  }
+
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    popover.classList.toggle("show");
+  });
+
+  // 색 선택 시 실시간 적용 + 가독성을 위해 밝기에 맞춰 팔레트 자동 매칭
+  input.addEventListener("input", () => {
+    const color = input.value;
+    document.body.style.setProperty("--bg-color", color);
+    localStorage.setItem(BG_COLOR_KEY, color);
+    setPalette(isLightColor(color) ? "light" : "dark");
+  });
+
+  // 테마 기본 배경색으로 복귀
+  reset.addEventListener("click", () => {
+    localStorage.removeItem(BG_COLOR_KEY);
+    document.body.style.removeProperty("--bg-color");
+    syncInputToCurrentBg();
+    popover.classList.remove("show");
+  });
+
+  // 팝오버 바깥 클릭 시 닫기
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".bg-color-control")) {
+      popover.classList.remove("show");
+    }
+  });
 }
 
 /* --- 데이터 로드 및 저장 --- */
