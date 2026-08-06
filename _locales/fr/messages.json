@@ -1,0 +1,23 @@
+{
+  "searchPlaceholder": { "message": "Rechercher sur Google ou saisir une URL" },
+  "addShortcutTitle": { "message": "Ajouter un raccourci" },
+  "editShortcutTitle": { "message": "Modifier le raccourci" },
+  "addBtnLabel": { "message": "Ajouter" },
+  "saveBtnLabel": { "message": "Enregistrer" },
+  "cancelBtnLabel": { "message": "Annuler" },
+  "modalHeaderAdd": { "message": "Ajouter un raccourci" },
+  "modalHeaderEdit": { "message": "Modifier le raccourci" },
+  "nameLabel": { "message": "Nom" },
+  "urlLabel": { "message": "URL" },
+  "themeTitle": { "message": "Changer de thème" },
+  "bgColorTitle": { "message": "Changer la couleur d'arrière-plan" },
+  "bgColorLabel": { "message": "Arrière-plan" },
+  "bgColorReset": { "message": "Valeur par défaut du thème" },
+  "imgSearchTitle": { "message": "Recherche d'images" },
+  "aiModeTitle": { "message": "Mode de recherche IA" },
+  "menuEdit": { "message": "Modifier" },
+  "menuDelete": { "message": "Supprimer" },
+  "titleLoadingPlaceholder": { "message": "Récupération du nom..." },
+  "titleInputPlaceholder": { "message": "p. ex. YouTube" },
+  "aiModeBtnText": { "message": "Mode IA" }
+}

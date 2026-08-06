@@ -21,55 +21,11 @@ async function getChromeFaviconDefaultHex() {
 }
 
 // --- 다국어 지원 ---
-const translations = {
-  ko: {
-    searchPlaceholder: "Google 검색 또는 URL 입력",
-    addShortcutTitle: "바로가기 추가",
-    editShortcutTitle: "바로가기 수정",
-    addBtnLabel: "추가",
-    saveBtnLabel: "저장",
-    cancelBtnLabel: "취소",
-    modalHeaderAdd: "바로가기 추가",
-    modalHeaderEdit: "바로가기 수정",
-    nameLabel: "이름",
-    urlLabel: "URL",
-    themeTitle: "테마 변경",
-    bgColorTitle: "배경색 변경",
-    bgColorLabel: "배경색",
-    bgColorReset: "테마 기본값",
-    imgSearchTitle: "이미지 검색",
-    aiModeTitle: "AI 검색 모드",
-    menuEdit: "수정",
-    menuDelete: "삭제",
-    titleLoadingPlaceholder: "이름 자동 입력 중...",
-    titleInputPlaceholder: "예: 유튜브",
-  },
-  en: {
-    searchPlaceholder: "Search Google or type a URL",
-    addShortcutTitle: "Add Shortcut",
-    editShortcutTitle: "Edit Shortcut",
-    addBtnLabel: "Add",
-    saveBtnLabel: "Save",
-    cancelBtnLabel: "Cancel",
-    modalHeaderAdd: "Add Shortcut",
-    modalHeaderEdit: "Edit Shortcut",
-    nameLabel: "Name",
-    urlLabel: "URL",
-    themeTitle: "Toggle Theme",
-    bgColorTitle: "Change background color",
-    bgColorLabel: "Background",
-    bgColorReset: "Theme default",
-    imgSearchTitle: "Image Search",
-    aiModeTitle: "AI Search Mode",
-    menuEdit: "Edit",
-    menuDelete: "Delete",
-    titleLoadingPlaceholder: "Fetching name...",
-    titleInputPlaceholder: "e.g. YouTube",
-  },
-};
-
-const userLang = navigator.language.startsWith("ko") ? "ko" : "en";
-const t = translations[userLang];
+// Chrome 표준 i18n(_locales/<lang>/messages.json)에서 메시지를 읽어온다.
+// chrome.i18n.getMessage()는 Chrome의 표시 언어 설정에 맞는 메시지가 있으면 그걸 쓰고,
+// 없으면 manifest.json의 default_locale로 자동 폴백한다.
+// 기존 t.xxx 참조 문법을 그대로 쓸 수 있도록 얇은 Proxy로 감싼다.
+const t = new Proxy({}, { get: (_, key) => chrome.i18n.getMessage(key) });
 
 // --- DnD 및 페이지 전환 관련 변수 ---
 let draggedItem = null; // 드래그 중인 DOM 요소
@@ -123,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- UI 텍스트 적용 ---
 function applyLocalization() {
+  document.documentElement.lang = chrome.i18n.getUILanguage();
   document.getElementById("searchInput").placeholder = t.searchPlaceholder;
   document.getElementById("themeToggle").title = t.themeTitle;
   document.getElementById("bgColorToggle").title = t.bgColorTitle;
@@ -130,6 +87,7 @@ function applyLocalization() {
   document.getElementById("bgColorReset").textContent = t.bgColorReset;
   document.getElementById("imageSearchBtn").title = t.imgSearchTitle;
   document.getElementById("aiModeBtn").title = t.aiModeTitle;
+  document.querySelector("#aiModeBtn .btn-text").textContent = t.aiModeBtnText;
   document.querySelector('#addModal label[for="modalTitle"]').textContent =
     t.nameLabel;
   document.getElementById("modalTitle").placeholder = t.titleInputPlaceholder;

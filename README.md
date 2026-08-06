@@ -31,7 +31,7 @@
 - **AI Mode** — One-click access to Google AI Overview search
 - **Auto Title Fetch** — Automatically fetches page titles when adding shortcuts
 - **Top Sites Sync** — Initializes with your most visited sites on first use
-- **Multi-language** — Supports Korean and English based on browser locale
+- **Multi-language** — Automatically matches Chrome's display language (English, Korean, Russian, Japanese, Chinese, Spanish, French, German, Portuguese, Vietnamese, Indonesian), with English as fallback
 - **Digital Clock** — Beautiful clock with date display
 - **Keyboard Navigation** — Navigate pages with arrow keys
 - **Privacy First** — All data stored locally via Chrome Storage API
