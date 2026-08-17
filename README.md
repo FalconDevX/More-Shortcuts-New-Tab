@@ -1,7 +1,7 @@
 # More Shortcuts New Tab
 
 <p align="center">
-  <img src="assets/icons/icon128-white.png" alt="More Shortcuts New Tab Logo" width="128" height="128">
+  <img src="assets/icons/icon128.png" alt="More Shortcuts New Tab Logo" width="128" height="128">
 </p>
 
 <p align="center">
@@ -121,7 +121,7 @@ More-Shortcuts-New-Tab/
 │       └── MaterialIcons-Regular.woff2
 ├── assets/
 │   ├── icons/
-│   │   └── icon128-white.png  # Extension icon
+│   │   └── icon128.png        # Extension icon
 │   └── screenshots/           # Store screenshots
 ├── LICENSE
 └── README.md

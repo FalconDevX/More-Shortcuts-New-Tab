@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSearch();
   setupAddModal();
 
-  // Global click: close open menus.
   document.addEventListener("click", (e) => {
     if (
       !e.target.closest(".more-options-btn") &&
@@ -26,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Keyboard navigation.
   document.addEventListener("keydown", (e) => {
     const modal = document.getElementById("addModal");
     const searchInput = document.getElementById("searchInput");

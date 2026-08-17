@@ -574,7 +574,6 @@ body[data-theme="light"].reverse-search-colors .ai-mode-icon {
   user-select: none;
 }
 
-/* Only apply hover effects while not dragging */
 body:not(.is-dragging) .shortcut-item-container:hover {
   background: var(--hover-bg);
 }
@@ -604,7 +603,6 @@ body:not(.is-dragging) .shortcut-item-container:hover {
   transition: background-color 0.2s;
 }
 
-/* Only dim icons on hover while not dragging */
 body:not(.is-dragging) .shortcut-item-container:hover .icon-circle {
   filter: brightness(0.95);
 }
@@ -624,7 +622,6 @@ body:not(.is-dragging) .shortcut-item-container:hover .icon-circle {
   line-height: 1;
 }
 
-/* "+" button icon color */
 .shortcut-item .icon-circle .material-icons {
   color: var(--shortcut-icon-color) !important;
 }
@@ -661,7 +658,6 @@ body:not(.is-dragging) .shortcut-item-container:hover .icon-circle {
   z-index: 2;
 }
 
-/* Only reveal the button on hover while not dragging */
 body:not(.is-dragging) .shortcut-item-container:hover .more-options-btn {
   opacity: 1;
 }

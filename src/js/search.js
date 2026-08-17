@@ -149,14 +149,12 @@ function setupSearch() {
     searchBar.classList.remove('has-suggestions');
   }
 
-  // Hide suggestions when clicking outside
   document.addEventListener("click", (e) => {
     if (!searchBar.contains(e.target)) {
       hideSuggestions();
     }
   });
 
-  // Re-show suggestions when input is focused if there's text
   input.addEventListener("focus", () => {
     if (input.value.trim() && suggestionsList.children.length > 0) {
       showSuggestions();
