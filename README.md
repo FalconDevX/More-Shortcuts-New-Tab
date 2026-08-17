@@ -1,7 +1,7 @@
 # More Shortcuts New Tab
 
 <p align="center">
-  <img src="assets/icons/icon128.png" alt="More Shortcuts New Tab Logo" width="128" height="128">
+  <img src="assets/icons/icon128-white.png" alt="More Shortcuts New Tab Logo" width="128" height="128">
 </p>
 
 <p align="center">
@@ -104,14 +104,24 @@ More-Shortcuts-New-Tab/
 ├── manifest.json              # Extension configuration
 ├── src/
 │   ├── newtab.html            # Main HTML structure
-│   ├── script.js              # Core functionality
+│   ├── js/
+│   │   ├── main.js            # Entry point, localization, global listeners
+│   │   ├── theme.js           # Light/dark/system theme handling
+│   │   ├── customize.js       # Customize panel, background wallpaper
+│   │   ├── shortcuts.js       # Grid rendering, pagination
+│   │   ├── storage.js         # Shortcuts persistence (chrome.storage.sync)
+│   │   ├── favicons.js        # Favicon fetching, caching, fallbacks
+│   │   ├── dragdrop.js        # Drag-and-drop reordering
+│   │   ├── search.js          # Search bar and suggestions
+│   │   ├── clock.js           # Clock and date display
+│   │   └── modal.js           # Add/edit shortcut modal
 │   ├── styles.css             # Styling with CSS variables
 │   └── fonts/
 │       ├── Inter-VariableFont.ttf
 │       └── MaterialIcons-Regular.woff2
 ├── assets/
 │   ├── icons/
-│   │   └── icon128.png        # Extension icon
+│   │   └── icon128-white.png  # Extension icon
 │   └── screenshots/           # Store screenshots
 ├── LICENSE
 └── README.md
