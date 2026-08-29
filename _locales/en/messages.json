@@ -18,5 +18,7 @@
   "menuDelete": { "message": "Delete" },
   "titleLoadingPlaceholder": { "message": "Fetching name..." },
   "titleInputPlaceholder": { "message": "e.g. YouTube" },
-  "aiModeBtnText": { "message": "AI Mode" }
+  "aiModeBtnText": { "message": "AI Mode" },
+  "importInvalidFile": { "message": "This file could not be read as a shortcuts export." },
+  "importConfirm": { "message": "This will replace your current shortcuts. Continue?" }
 }

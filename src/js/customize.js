@@ -3,6 +3,56 @@ const MAX_DEFAULT_WALLPAPERS = 100;
 const MAX_WALLPAPER_EDGE = 1920;
 const WALLPAPER_THUMB_SIZE = 160;
 const MAX_WALLPAPER_DATA_URL_LENGTH = 700 * 1024;
+const GOOGLE_APP_IDS = [
+  "gmail",
+  "drive",
+  "meet",
+  "calendar",
+  "photos",
+  "maps",
+  "docs",
+  "slides",
+  "sheets",
+  "keep",
+  "gemini",
+];
+
+function createSlidingDialog(modal) {
+  let closeTimer;
+
+  const close = () => {
+    if (!modal.open || modal.classList.contains("closing")) return;
+
+    modal.classList.add("closing");
+    closeTimer = window.setTimeout(() => {
+      modal.close();
+      modal.classList.remove("closing");
+    }, 200);
+  };
+
+  const open = () => {
+    window.clearTimeout(closeTimer);
+    modal.classList.remove("closing");
+    modal.showModal();
+  };
+
+  modal.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    close();
+  });
+
+  modal.addEventListener("click", (event) => {
+    const rect = modal.getBoundingClientRect();
+    const clickedOutsidePanel =
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom;
+    if (clickedOutsidePanel) close();
+  });
+
+  return { open, close };
+}
 
 function initCustomize() {
   // Remove data created by the old "Recent" wallpapers feature.
@@ -19,46 +69,34 @@ function initCustomize() {
   const backgroundInput = document.getElementById("backgroundInput");
   const removeBackgroundBtn = document.getElementById("removeBackgroundBtn");
   const backgroundDim = document.getElementById("backgroundDim");
-  let closeTimer;
+  const exportShortcutsBtn = document.getElementById("exportShortcutsBtn");
+  const importShortcutsInput = document.getElementById("importShortcutsInput");
+  const googleAppsModal = document.getElementById("googleAppsModal");
+  const editGoogleAppsBtn = document.getElementById("editGoogleAppsBtn");
+  const closeGoogleAppsBtn = document.getElementById("closeGoogleAppsBtn");
+  const googleAppList = document.getElementById("googleAppList");
+  const googleAppsGroup = document.getElementById("googleAppsGroup");
+  const hideAllGoogleApps = document.getElementById("hideAllGoogleApps");
+  const googleAppToggles = document.querySelectorAll("[id^='googleAppToggle-']");
 
-  const closeCustomize = () => {
-    if (!modal.open || modal.classList.contains("closing")) return;
-
-    modal.classList.add("closing");
-    closeTimer = window.setTimeout(() => {
-      modal.close();
-      modal.classList.remove("closing");
-    }, 200);
-  };
+  const customizeDialog = createSlidingDialog(modal);
+  const googleAppsDialog = createSlidingDialog(googleAppsModal);
 
   customizeBtn.addEventListener("click", () => {
-    if (modal.open) {
-      closeCustomize();
-      return;
-    }
-
-    window.clearTimeout(closeTimer);
-    modal.classList.remove("closing");
-    modal.showModal();
+    if (modal.open) customizeDialog.close();
+    else customizeDialog.open();
   });
 
   closeBtn.addEventListener("click", () => {
-    closeCustomize();
+    customizeDialog.close();
   });
 
-  modal.addEventListener("cancel", (event) => {
-    event.preventDefault();
-    closeCustomize();
+  editGoogleAppsBtn.addEventListener("click", () => {
+    googleAppsDialog.open();
   });
 
-  modal.addEventListener("click", (event) => {
-    const rect = modal.getBoundingClientRect();
-    const clickedOutsidePanel =
-      event.clientX < rect.left ||
-      event.clientX > rect.right ||
-      event.clientY < rect.top ||
-      event.clientY > rect.bottom;
-    if (clickedOutsidePanel) closeCustomize();
+  closeGoogleAppsBtn.addEventListener("click", () => {
+    googleAppsDialog.close();
   });
 
   themeSelect.addEventListener("click", () => {
@@ -194,6 +232,43 @@ function initCustomize() {
     await renderWallpaperGallery();
   });
 
+  googleAppToggles.forEach((toggle) => {
+    const app = toggle.dataset.googleApp;
+    const isVisible = localStorage.getItem(`googleApp_${app}Hidden`) !== "true";
+    toggle.checked = isVisible;
+    setGoogleAppVisibility(app, isVisible);
+
+    toggle.addEventListener("change", () => {
+      localStorage.setItem(`googleApp_${app}Hidden`, String(!toggle.checked));
+      setGoogleAppVisibility(app, toggle.checked);
+    });
+  });
+
+  const allGoogleAppsHidden = localStorage.getItem("googleAppsHidden") === "true";
+  hideAllGoogleApps.checked = !allGoogleAppsHidden;
+  googleAppsGroup.hidden = allGoogleAppsHidden;
+
+  hideAllGoogleApps.addEventListener("change", () => {
+    const hideAll = !hideAllGoogleApps.checked;
+    localStorage.setItem("googleAppsHidden", String(hideAll));
+    setGoogleAppsGroupVisibility(googleAppsGroup, !hideAll);
+  });
+
+  applyGoogleAppOrder(getGoogleAppOrder());
+  attachGoogleAppDragAndDrop(googleAppsGroup, ".header-link", true);
+  attachGoogleAppDragAndDrop(googleAppList, ".google-app-row", false);
+
+  exportShortcutsBtn.addEventListener("click", () => {
+    exportShortcuts();
+  });
+
+  importShortcutsInput.addEventListener("change", async () => {
+    const file = importShortcutsInput.files[0];
+    if (!file) return;
+    await importShortcutsFromFile(file);
+    importShortcutsInput.value = "";
+  });
+
   initializeWallpaperGallery();
 }
 
@@ -222,6 +297,180 @@ async function loadBackground() {
   if (result.customBackground) {
     applyBackground(result.customBackground);
   }
+}
+
+function setGoogleAppVisibility(app, isVisible) {
+  const link = document.querySelector(`.header-link[data-google-app="${app}"]`);
+  if (link) link.hidden = !isVisible;
+}
+
+const GOOGLE_APPS_STAGGER_MS = 45;
+const GOOGLE_APPS_FADE_MS = 220;
+
+// Animates the whole group in/out: showing builds the bar right-to-left,
+// hiding collapses it left-to-right, each icon staggered after the last.
+function setGoogleAppsGroupVisibility(group, show) {
+  const items = [...group.querySelectorAll(".header-link:not([hidden])")];
+
+  if (!items.length) {
+    group.hidden = !show;
+    return;
+  }
+
+  const token = Symbol();
+  group._googleAppsAnimToken = token;
+
+  items.forEach((item) => {
+    item.style.transition = "none";
+  });
+
+  if (show) {
+    group.hidden = false;
+    items.forEach((item) => {
+      item.style.opacity = "0";
+      item.style.transform = "translateY(-4px)";
+    });
+  }
+
+  void group.offsetWidth; // commit the "from" state before transitioning
+
+  items.forEach((item, index) => {
+    const order = show ? items.length - 1 - index : index;
+    const delay = order * GOOGLE_APPS_STAGGER_MS;
+    item.style.transition = `opacity ${GOOGLE_APPS_FADE_MS}ms ease ${delay}ms, transform ${GOOGLE_APPS_FADE_MS}ms ease ${delay}ms`;
+    item.style.opacity = show ? "" : "0";
+    item.style.transform = show ? "" : "translateY(-4px)";
+  });
+
+  const totalDuration =
+    (items.length - 1) * GOOGLE_APPS_STAGGER_MS + GOOGLE_APPS_FADE_MS;
+
+  window.setTimeout(() => {
+    if (group._googleAppsAnimToken !== token) return;
+
+    if (!show) group.hidden = true;
+    items.forEach((item) => {
+      item.style.transition = "";
+      item.style.opacity = "";
+      item.style.transform = "";
+    });
+  }, totalDuration);
+}
+
+function getGoogleAppOrder() {
+  let stored;
+  try {
+    stored = JSON.parse(localStorage.getItem("googleAppOrder"));
+  } catch {
+    stored = null;
+  }
+
+  const known = Array.isArray(stored)
+    ? stored.filter((app) => GOOGLE_APP_IDS.includes(app))
+    : [];
+  const missing = GOOGLE_APP_IDS.filter((app) => !known.includes(app));
+
+  return [...known, ...missing];
+}
+
+function reorderElements(container, order, getElement, beforeNode = null) {
+  const fragment = document.createDocumentFragment();
+  order.forEach((app) => {
+    const element = getElement(app);
+    if (element) fragment.appendChild(element);
+  });
+  container.insertBefore(fragment, beforeNode);
+}
+
+function applyGoogleAppOrder(order) {
+  reorderElements(document.getElementById("googleAppList"), order, (app) =>
+    document.querySelector(`.google-app-row[data-google-app="${app}"]`),
+  );
+
+  reorderElements(document.getElementById("googleAppsGroup"), order, (app) =>
+    document.querySelector(`.header-link[data-google-app="${app}"]`),
+  );
+}
+
+function saveGoogleAppOrder(order) {
+  localStorage.setItem("googleAppOrder", JSON.stringify(order));
+  applyGoogleAppOrder(order);
+}
+
+// FLIP-style animation: record positions, run the DOM change, animate the delta.
+function animateGoogleAppReorder(container, itemSelector, moveAction) {
+  const items = [...container.querySelectorAll(itemSelector)];
+  const positions = new Map();
+
+  items.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    positions.set(item, { left: rect.left, top: rect.top });
+  });
+
+  moveAction();
+
+  items.forEach((item) => {
+    const oldPos = positions.get(item);
+    if (!oldPos) return;
+
+    const rect = item.getBoundingClientRect();
+    const deltaX = oldPos.left - rect.left;
+    const deltaY = oldPos.top - rect.top;
+
+    if (deltaX === 0 && deltaY === 0) return;
+
+    item.style.transition = "none";
+    item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+    requestAnimationFrame(() => {
+      item.getBoundingClientRect(); // force reflow
+      item.style.transition = "";
+      item.style.transform = "";
+    });
+  });
+}
+
+function attachGoogleAppDragAndDrop(container, itemSelector, horizontal) {
+  let dragged = null;
+
+  container.addEventListener("dragstart", (event) => {
+    const item = event.target.closest(itemSelector);
+    if (!item) return;
+    dragged = item;
+    item.classList.add("dragging");
+    event.dataTransfer.effectAllowed = "move";
+  });
+
+  container.addEventListener("dragend", (event) => {
+    const item = event.target.closest(itemSelector);
+    if (item) item.classList.remove("dragging");
+    if (!dragged) return;
+    dragged = null;
+
+    const order = [...container.querySelectorAll(itemSelector)].map(
+      (element) => element.dataset.googleApp,
+    );
+    saveGoogleAppOrder(order);
+  });
+
+  container.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    const item = event.target.closest(itemSelector);
+    if (!dragged || !item || item === dragged) return;
+
+    const rect = item.getBoundingClientRect();
+    const isAfter = horizontal
+      ? event.clientX - rect.left > rect.width / 2
+      : event.clientY - rect.top > rect.height / 2;
+
+    animateGoogleAppReorder(container, itemSelector, () => {
+      container.insertBefore(dragged, isAfter ? item.nextSibling : item);
+    });
+  });
+
+  container.addEventListener("drop", (event) => {
+    if (dragged) event.preventDefault();
+  });
 }
 
 function applyBackground(image) {

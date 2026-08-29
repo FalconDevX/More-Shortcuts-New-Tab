@@ -99,6 +99,11 @@ body[data-theme="light"].has-color-theme {
   --icon-circle-bg: color-mix(in srgb, var(--palette-color) 38%, #242526);
 }
 
+body[data-theme="light"]:not(.has-color-theme) {
+  --page-text-main: #16181a;
+  --date-text-color: #16181a;
+}
+
 body[data-color-theme="black"].has-color-theme {
   --page-accent: #111111;
   --icon-circle-bg: #111111;
@@ -146,15 +151,30 @@ body.has-wallpaper::before {
   gap: 20px;
   z-index: 100;
 }
+.google-apps-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.google-apps-group[hidden] {
+  display: none;
+}
 .header-link {
   text-decoration: none;
   color: var(--page-text-main);
   font-size: 13px;
   display: flex;
   align-items: center;
+  transition: transform 0.2s ease;
 }
 .header-link:hover {
   opacity: 0.8;
+}
+.header-link[hidden] {
+  display: none;
+}
+.header-link.dragging {
+  opacity: 0.4;
 }
 .header-icon {
   width: 20px;
@@ -979,6 +999,52 @@ img.favicon-loading {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.customize-section .customize-toggle-row {
+  display: flex;
+  margin-bottom: 0;
+}
+
+.google-app-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.google-app-row {
+  padding: 6px 4px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.google-app-row-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.google-app-drag-handle {
+  cursor: grab;
+  color: var(--text-sub);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.google-app-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.google-app-row:active .google-app-drag-handle {
+  cursor: grabbing;
+}
+
+.google-app-row.dragging {
+  opacity: 0.4;
 }
 
 .customize-hint {
