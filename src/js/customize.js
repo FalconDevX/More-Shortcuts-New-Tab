@@ -41,6 +41,12 @@ function createSlidingDialog(modal) {
   });
 
   modal.addEventListener("click", (event) => {
+    // Only the dialog's own backdrop area can be the click target directly;
+    // clicks on descendants (including a synthetic click bubbling from a
+    // programmatically-triggered hidden file input, which reports (0,0))
+    // must not be mistaken for a backdrop click.
+    if (event.target !== modal) return;
+
     const rect = modal.getBoundingClientRect();
     const clickedOutsidePanel =
       event.clientX < rect.left ||

@@ -41,6 +41,7 @@
 - **Multi-Page Support**: organize shortcuts across multiple pages with pagination
 - **Auto Title Fetch**: automatically fetches page titles when adding shortcuts
 - **Export / Import**: back up your shortcuts to a file, or restore them on another device
+- **Import from Chrome**: pull shortcuts straight from Chrome's own New Tab page by selecting its `Preferences` file, with a preview to pick which ones to add
 
 ### Search
 - **Google Search Integration**: search Google directly from the new tab, with live suggestions
@@ -107,6 +108,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 - Upload a **wallpaper** or choose a preset, and adjust its darkness
 - Show, hide, and reorder the **Google apps bar**
 - **Export** your shortcuts to a file, or **import** a previous backup
+- **Import from Chrome**: select Chrome's `Preferences` file (find it via `chrome://version` → "Profile Path") to pull in your existing Chrome New Tab shortcuts, with a checklist to choose which ones to add
 
 ## Screenshots
 
@@ -129,6 +131,12 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
     <td align="center">
       <img src="assets/screenshots/google-apps-panel.png" alt="Google apps panel" width="260"><br>
       <sub><strong>Choose & reorder Google apps</strong></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="assets/screenshots/import-from-chrome.png" alt="Import from Chrome" width="320"><br>
+      <sub><strong>Import shortcuts from Chrome's own New Tab page</strong></sub>
     </td>
   </tr>
   <tr>
@@ -173,6 +181,7 @@ More-Shortcuts-New-Tab/
 │   ├── newtab.html            # Main HTML structure
 │   ├── js/
 │   │   ├── main.js            # Entry point, localization, global listeners
+│   │   ├── prefs.js           # Synced preferences (chrome.storage.sync + local mirror)
 │   │   ├── theme.js           # Light/dark/system theme handling
 │   │   ├── customize.js       # Customize panel, wallpaper, Google apps bar
 │   │   ├── shortcuts.js       # Grid rendering, pagination
@@ -181,7 +190,8 @@ More-Shortcuts-New-Tab/
 │   │   ├── dragdrop.js        # Drag-and-drop reordering
 │   │   ├── search.js          # Search bar and suggestions
 │   │   ├── clock.js           # Clock and date display
-│   │   └── modal.js           # Add/edit shortcut modal
+│   │   ├── modal.js           # Add/edit shortcut modal
+│   │   └── chromeImport.js    # Import shortcuts from Chrome's Preferences file
 │   ├── styles.css             # Styling with CSS variables
 │   └── fonts/
 │       ├── Inter-VariableFont.ttf

@@ -250,6 +250,13 @@
                             hidden
                     >
                 </div>
+
+                <div class="upload-row">
+                    <button id="importFromChromeBtn" class="customize-btn" type="button">
+                        <span class="material-icons">travel_explore</span>
+                        Import from Chrome
+                    </button>
+                </div>
             </div>
         </div>
     </dialog>
@@ -394,12 +401,52 @@
         </div>
     </dialog>
 
+    <dialog id="chromeImportModal" class="customize-modal">
+        <div class="customize-content">
+            <div class="customize-header">
+                <h3>Import from Chrome</h3>
+
+                <button id="closeChromeImportBtn" class="icon-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="customize-section" id="chromeImportIntro">
+                <p class="chrome-import-hint">
+                    Select Chrome's <code>Preferences</code> file to import its New Tab shortcuts.
+                    Find its location by opening <code>chrome://version</code> in Chrome and looking
+                    for "Profile Path".
+                </p>
+
+                <div class="chrome-import-dropzone" id="chromeImportDropzone" tabindex="0" role="button">
+                    <span class="material-icons">upload_file</span>
+                    <span>Drag the <code>Preferences</code> file here, or click to choose it</span>
+                </div>
+                <input type="file" id="chromeImportFileInput" hidden>
+            </div>
+
+            <div class="customize-section" id="chromeImportPreview" hidden>
+                <span class="chrome-import-summary" id="chromeImportSummary"></span>
+                <div class="chrome-import-list" id="chromeImportList"></div>
+                <div class="modal-actions">
+                    <button type="button" id="chromeImportCancelBtn">Cancel</button>
+                    <button type="button" class="primary" id="chromeImportConfirmBtn">Import</button>
+                </div>
+            </div>
+
+            <div class="customize-section" id="chromeImportError" hidden>
+                <span class="chrome-import-error" id="chromeImportErrorText"></span>
+            </div>
+        </div>
+    </dialog>
+
     <script src="js/prefs.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/favicons.js"></script>
     <script src="js/dragdrop.js"></script>
     <script src="js/shortcuts.js"></script>
     <script src="js/modal.js"></script>
+    <script src="js/chromeImport.js"></script>
     <script src="js/search.js"></script>
     <script src="js/clock.js"></script>
     <script src="js/theme.js"></script>

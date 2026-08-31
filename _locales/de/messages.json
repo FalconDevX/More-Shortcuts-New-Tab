@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "z. B. YouTube" },
   "aiModeBtnText": { "message": "KI-Modus" },
   "importInvalidFile": { "message": "Diese Datei konnte nicht als Verknüpfungs-Export gelesen werden." },
-  "importConfirm": { "message": "Dadurch werden deine aktuellen Verknüpfungen ersetzt. Fortfahren?" }
+  "importConfirm": { "message": "Dadurch werden deine aktuellen Verknüpfungen ersetzt. Fortfahren?" },
+  "chromeImportFoundOne": { "message": "1 Verknüpfung gefunden." },
+  "chromeImportFoundMany": { "message": "{count} Verknüpfungen gefunden." },
+  "chromeImportInvalidFile": { "message": "Das sieht nicht nach einer Chrome-Preferences-Datei aus." },
+  "chromeImportNoShortcuts": { "message": "In diesem Profil wurden keine Verknüpfungen gefunden." }
 }

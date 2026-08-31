@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "例: YouTube" },
   "aiModeBtnText": { "message": "AIモード" },
   "importInvalidFile": { "message": "このファイルはショートカットのエクスポートとして読み込めませんでした。" },
-  "importConfirm": { "message": "現在のショートカットが置き換えられます。続行しますか？" }
+  "importConfirm": { "message": "現在のショートカットが置き換えられます。続行しますか？" },
+  "chromeImportFoundOne": { "message": "1件のショートカットが見つかりました。" },
+  "chromeImportFoundMany": { "message": "{count}件のショートカットが見つかりました。" },
+  "chromeImportInvalidFile": { "message": "これはChromeのPreferencesファイルではないようです。" },
+  "chromeImportNoShortcuts": { "message": "このプロファイルにはショートカットが見つかりませんでした。" }
 }

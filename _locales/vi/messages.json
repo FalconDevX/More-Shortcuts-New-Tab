@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "vd: YouTube" },
   "aiModeBtnText": { "message": "Chế độ AI" },
   "importInvalidFile": { "message": "Không thể đọc tệp này dưới dạng tệp xuất lối tắt." },
-  "importConfirm": { "message": "Thao tác này sẽ thay thế các lối tắt hiện tại của bạn. Tiếp tục?" }
+  "importConfirm": { "message": "Thao tác này sẽ thay thế các lối tắt hiện tại của bạn. Tiếp tục?" },
+  "chromeImportFoundOne": { "message": "Đã tìm thấy 1 lối tắt." },
+  "chromeImportFoundMany": { "message": "Đã tìm thấy {count} lối tắt." },
+  "chromeImportInvalidFile": { "message": "Tệp này có vẻ không phải là tệp Preferences của Chrome." },
+  "chromeImportNoShortcuts": { "message": "Không tìm thấy lối tắt nào trong hồ sơ này." }
 }

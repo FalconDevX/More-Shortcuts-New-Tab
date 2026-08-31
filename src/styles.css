@@ -1408,3 +1408,103 @@ img.favicon-loading {
   opacity: 1;
   transform: scale(1.08);
 }
+
+/* --- Chrome shortcuts import --- */
+.chrome-import-hint {
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.chrome-import-hint code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--search-bg);
+  font-size: 10px;
+}
+
+.chrome-import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 16px;
+  border: 1px dashed var(--search-border-default);
+  border-radius: 10px;
+  color: var(--text-sub);
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.chrome-import-dropzone:hover,
+.chrome-import-dropzone:focus-visible,
+.chrome-import-dropzone.dragover {
+  border-color: var(--customize-active);
+  background: var(--hover-bg);
+  outline: none;
+}
+
+.chrome-import-dropzone .material-icons {
+  font-size: 26px;
+  color: var(--text-sub);
+}
+
+.chrome-import-summary {
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.chrome-import-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.chrome-import-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chrome-import-row:hover {
+  background: var(--hover-bg);
+}
+
+.chrome-import-row input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.chrome-import-row-text {
+  min-width: 0;
+}
+
+.chrome-import-row-title {
+  overflow: hidden;
+  color: var(--text-main);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chrome-import-row-url {
+  overflow: hidden;
+  color: var(--text-sub);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chrome-import-error {
+  color: #ef6b73;
+  font-size: 12px;
+}

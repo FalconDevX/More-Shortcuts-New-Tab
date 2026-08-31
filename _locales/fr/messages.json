@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "p. ex. YouTube" },
   "aiModeBtnText": { "message": "Mode IA" },
   "importInvalidFile": { "message": "Ce fichier n'a pas pu être lu comme un export de raccourcis." },
-  "importConfirm": { "message": "Cela remplacera vos raccourcis actuels. Continuer ?" }
+  "importConfirm": { "message": "Cela remplacera vos raccourcis actuels. Continuer ?" },
+  "chromeImportFoundOne": { "message": "1 raccourci trouvé." },
+  "chromeImportFoundMany": { "message": "{count} raccourcis trouvés." },
+  "chromeImportInvalidFile": { "message": "Ce fichier ne ressemble pas à un fichier Preferences de Chrome." },
+  "chromeImportNoShortcuts": { "message": "Aucun raccourci trouvé dans ce profil." }
 }

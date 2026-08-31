@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "예: 유튜브" },
   "aiModeBtnText": { "message": "AI 모드" },
   "importInvalidFile": { "message": "이 파일을 바로가기 내보내기 파일로 읽을 수 없습니다." },
-  "importConfirm": { "message": "현재 바로가기가 대체됩니다. 계속하시겠습니까?" }
+  "importConfirm": { "message": "현재 바로가기가 대체됩니다. 계속하시겠습니까?" },
+  "chromeImportFoundOne": { "message": "바로가기 1개를 찾았습니다." },
+  "chromeImportFoundMany": { "message": "바로가기 {count}개를 찾았습니다." },
+  "chromeImportInvalidFile": { "message": "Chrome Preferences 파일이 아닌 것 같습니다." },
+  "chromeImportNoShortcuts": { "message": "이 프로필에서 바로가기를 찾을 수 없습니다." }
 }

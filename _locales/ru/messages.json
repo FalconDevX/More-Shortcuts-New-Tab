@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "напр. YouTube" },
   "aiModeBtnText": { "message": "Режим ИИ" },
   "importInvalidFile": { "message": "Не удалось прочитать этот файл как экспорт ярлыков." },
-  "importConfirm": { "message": "Это заменит ваши текущие ярлыки. Продолжить?" }
+  "importConfirm": { "message": "Это заменит ваши текущие ярлыки. Продолжить?" },
+  "chromeImportFoundOne": { "message": "Найден 1 ярлык." },
+  "chromeImportFoundMany": { "message": "Найдено ярлыков: {count}." },
+  "chromeImportInvalidFile": { "message": "Похоже, это не файл Preferences Chrome." },
+  "chromeImportNoShortcuts": { "message": "В этом профиле ярлыки не найдены." }
 }

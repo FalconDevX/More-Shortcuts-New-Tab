@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "e.g. YouTube" },
   "aiModeBtnText": { "message": "AI Mode" },
   "importInvalidFile": { "message": "This file could not be read as a shortcuts export." },
-  "importConfirm": { "message": "This will replace your current shortcuts. Continue?" }
+  "importConfirm": { "message": "This will replace your current shortcuts. Continue?" },
+  "chromeImportFoundOne": { "message": "Found 1 shortcut." },
+  "chromeImportFoundMany": { "message": "Found {count} shortcuts." },
+  "chromeImportInvalidFile": { "message": "This doesn't look like a Chrome Preferences file." },
+  "chromeImportNoShortcuts": { "message": "No shortcuts were found in this profile." }
 }

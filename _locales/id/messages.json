@@ -19,5 +19,9 @@
   "titleInputPlaceholder": { "message": "mis. YouTube" },
   "aiModeBtnText": { "message": "Mode AI" },
   "importInvalidFile": { "message": "File ini tidak dapat dibaca sebagai file ekspor pintasan." },
-  "importConfirm": { "message": "Ini akan mengganti pintasan Anda saat ini. Lanjutkan?" }
+  "importConfirm": { "message": "Ini akan mengganti pintasan Anda saat ini. Lanjutkan?" },
+  "chromeImportFoundOne": { "message": "Ditemukan 1 pintasan." },
+  "chromeImportFoundMany": { "message": "Ditemukan {count} pintasan." },
+  "chromeImportInvalidFile": { "message": "Ini sepertinya bukan file Preferences Chrome." },
+  "chromeImportNoShortcuts": { "message": "Tidak ada pintasan yang ditemukan di profil ini." }
 }
