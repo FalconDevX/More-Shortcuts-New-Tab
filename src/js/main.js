@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   applyLocalization();
   initTheme();
   initCustomize();
+  reconcilePrefs(applyChangedPref);
   loadBackground();
   updateClock();
   setInterval(updateClock, 1000);

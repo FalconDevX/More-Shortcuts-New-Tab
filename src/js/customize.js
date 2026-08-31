@@ -110,7 +110,7 @@ function initCustomize() {
 
     const mode = option.dataset.value;
 
-    localStorage.setItem("themeMode", mode);
+    setPref("themeMode", mode);
     setThemePickerValue(mode);
     applyTheme(mode);
 
@@ -126,7 +126,7 @@ function initCustomize() {
   });
 
   const savedReverseColors =
-    localStorage.getItem("reverseSearchColors") === "true";
+    getPrefSync("reverseSearchColors", "false") === "true";
   reverseSearchColors.checked = savedReverseColors;
   document.body.classList.toggle(
     "reverse-search-colors",
@@ -135,32 +135,11 @@ function initCustomize() {
 
   reverseSearchColors.addEventListener("change", () => {
     const enabled = reverseSearchColors.checked;
-    localStorage.setItem("reverseSearchColors", String(enabled));
+    setPref("reverseSearchColors", String(enabled));
     document.body.classList.toggle("reverse-search-colors", enabled);
   });
 
-  const applyColorTheme = (name, color) => {
-    const isNeutral = name === "neutral";
-    document.body.classList.toggle("has-color-theme", !isNeutral);
-    document.body.dataset.colorTheme = name;
-
-    if (isNeutral) {
-      document.body.style.removeProperty("--palette-color");
-    } else {
-      document.body.style.setProperty("--palette-color", color);
-    }
-
-    colorThemeOptions.querySelectorAll("[data-theme-color]").forEach((swatch) => {
-      if (swatch.dataset.color) {
-        swatch.style.setProperty("--swatch-color", swatch.dataset.color);
-      }
-      const selected = swatch.dataset.themeColor === name;
-      swatch.classList.toggle("selected", selected);
-      swatch.setAttribute("aria-pressed", String(selected));
-    });
-  };
-
-  const savedColorTheme = localStorage.getItem("colorTheme") || "neutral";
+  const savedColorTheme = getPrefSync("colorTheme", "neutral");
   const savedSwatch = colorThemeOptions.querySelector(
     `[data-theme-color="${savedColorTheme}"]`,
   );
@@ -174,11 +153,11 @@ function initCustomize() {
     if (!swatch) return;
 
     const name = swatch.dataset.themeColor;
-    localStorage.setItem("colorTheme", name);
+    setPref("colorTheme", name);
     applyColorTheme(name, swatch.dataset.color);
   });
 
-  const savedDim = localStorage.getItem("backgroundDim") || "20";
+  const savedDim = getPrefSync("backgroundDim", "20");
 
   backgroundDim.value = savedDim;
 
@@ -188,10 +167,16 @@ function initCustomize() {
   backgroundDim.addEventListener("input", () => {
     const value = backgroundDim.value;
 
-    localStorage.setItem("backgroundDim", value);
+    // Local-only write while dragging; syncing every tick would burst
+    // past chrome.storage.sync's per-minute write quota.
+    setPrefLocal("backgroundDim", value);
 
     setBackgroundDim(value);
     updateRangeFill(backgroundDim);
+  });
+
+  backgroundDim.addEventListener("change", () => {
+    setPref("backgroundDim", backgroundDim.value);
   });
 
   backgroundInput.addEventListener("change", async () => {
@@ -233,23 +218,23 @@ function initCustomize() {
 
   googleAppToggles.forEach((toggle) => {
     const app = toggle.dataset.googleApp;
-    const isVisible = localStorage.getItem(`googleApp_${app}Hidden`) !== "true";
+    const isVisible = getPrefSync(`googleApp_${app}Hidden`, "false") !== "true";
     toggle.checked = isVisible;
     setGoogleAppVisibility(app, isVisible);
 
     toggle.addEventListener("change", () => {
-      localStorage.setItem(`googleApp_${app}Hidden`, String(!toggle.checked));
+      setPref(`googleApp_${app}Hidden`, String(!toggle.checked));
       setGoogleAppVisibility(app, toggle.checked);
     });
   });
 
-  const allGoogleAppsHidden = localStorage.getItem("googleAppsHidden") === "true";
+  const allGoogleAppsHidden = getPrefSync("googleAppsHidden", "false") === "true";
   hideAllGoogleApps.checked = !allGoogleAppsHidden;
   googleAppsGroup.hidden = allGoogleAppsHidden;
 
   hideAllGoogleApps.addEventListener("change", () => {
     const hideAll = !hideAllGoogleApps.checked;
-    localStorage.setItem("googleAppsHidden", String(hideAll));
+    setPref("googleAppsHidden", String(hideAll));
     setGoogleAppsGroupVisibility(googleAppsGroup, !hideAll);
   });
 
@@ -302,6 +287,84 @@ async function loadBackground() {
 function setGoogleAppVisibility(app, isVisible) {
   const link = document.querySelector(`.header-link[data-google-app="${app}"]`);
   if (link) link.hidden = !isVisible;
+}
+
+function applyColorTheme(name, color) {
+  const isNeutral = name === "neutral";
+  document.body.classList.toggle("has-color-theme", !isNeutral);
+  document.body.dataset.colorTheme = name;
+
+  if (isNeutral) {
+    document.body.style.removeProperty("--palette-color");
+  } else {
+    document.body.style.setProperty("--palette-color", color);
+  }
+
+  const colorThemeOptions = document.getElementById("colorThemeOptions");
+  colorThemeOptions?.querySelectorAll("[data-theme-color]").forEach((swatch) => {
+    if (swatch.dataset.color) {
+      swatch.style.setProperty("--swatch-color", swatch.dataset.color);
+    }
+    const selected = swatch.dataset.themeColor === name;
+    swatch.classList.toggle("selected", selected);
+    swatch.setAttribute("aria-pressed", String(selected));
+  });
+}
+
+// Re-applies a single preference after reconcilePrefs() pulls in a value
+// that changed on another device.
+function applyChangedPref(key, value) {
+  if (key === "themeMode") {
+    applyTheme(value);
+    setThemePickerValue(value);
+    return;
+  }
+
+  if (key === "reverseSearchColors") {
+    const enabled = value === "true";
+    const toggle = document.getElementById("reverseSearchColors");
+    if (toggle) toggle.checked = enabled;
+    document.body.classList.toggle("reverse-search-colors", enabled);
+    return;
+  }
+
+  if (key === "colorTheme") {
+    const colorThemeOptions = document.getElementById("colorThemeOptions");
+    const swatch = colorThemeOptions?.querySelector(`[data-theme-color="${value}"]`);
+    applyColorTheme(swatch ? value : "neutral", swatch?.dataset.color || "");
+    return;
+  }
+
+  if (key === "backgroundDim") {
+    const input = document.getElementById("backgroundDim");
+    if (!input) return;
+    input.value = value;
+    setBackgroundDim(value);
+    updateRangeFill(input);
+    return;
+  }
+
+  if (key === "googleAppsHidden") {
+    const hideAll = value === "true";
+    const toggle = document.getElementById("hideAllGoogleApps");
+    if (toggle) toggle.checked = !hideAll;
+    const group = document.getElementById("googleAppsGroup");
+    if (group) setGoogleAppsGroupVisibility(group, !hideAll);
+    return;
+  }
+
+  if (key === "googleAppOrder") {
+    applyGoogleAppOrder(getGoogleAppOrder());
+    return;
+  }
+
+  if (key.startsWith("googleApp_") && key.endsWith("Hidden")) {
+    const app = key.slice("googleApp_".length, -"Hidden".length);
+    const isVisible = value !== "true";
+    const toggle = document.getElementById(`googleAppToggle-${app}`);
+    if (toggle) toggle.checked = isVisible;
+    setGoogleAppVisibility(app, isVisible);
+  }
 }
 
 const GOOGLE_APPS_STAGGER_MS = 45;
@@ -360,7 +423,7 @@ function setGoogleAppsGroupVisibility(group, show) {
 function getGoogleAppOrder() {
   let stored;
   try {
-    stored = JSON.parse(localStorage.getItem("googleAppOrder"));
+    stored = JSON.parse(getPrefSync("googleAppOrder", null));
   } catch {
     stored = null;
   }
@@ -393,7 +456,7 @@ function applyGoogleAppOrder(order) {
 }
 
 function saveGoogleAppOrder(order) {
-  localStorage.setItem("googleAppOrder", JSON.stringify(order));
+  setPref("googleAppOrder", JSON.stringify(order));
   applyGoogleAppOrder(order);
 }
 
