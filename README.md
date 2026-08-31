@@ -1,6 +1,15 @@
 # More Shortcuts New Tab
 
 <p align="center">
+  <img src="https://img.shields.io/github/manifest-json/v/FalconDevX/More-Shortcuts-New-Tab?filename=manifest.json&label=version&color=blue" alt="Version">
+  <img src="https://img.shields.io/badge/manifest-v3-blue" alt="Manifest V3">
+  <img src="https://img.shields.io/github/license/FalconDevX/More-Shortcuts-New-Tab" alt="License">
+  <img src="https://img.shields.io/github/last-commit/FalconDevX/More-Shortcuts-New-Tab" alt="Last commit">
+  <img src="https://img.shields.io/github/issues/FalconDevX/More-Shortcuts-New-Tab" alt="Open issues">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs welcome">
+</p>
+
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/icons/icon128-white.png">
     <img src="assets/icons/icon128.png" alt="More Shortcuts New Tab Logo" width="128" height="128">
@@ -100,9 +109,17 @@
 
 ## Screenshots
 
-| Dark Theme | Light Theme |
-|:----------:|:-----------:|
-| ![Dark Theme](assets/screenshots/full-dark.png) | ![Light Theme](assets/screenshots/full-light.png) |
+<p align="center">
+  <img src="assets/screenshots/new-tab-dark.png" alt="New tab page" width="800">
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/header-bar.png" alt="Google apps bar" width="700">
+</p>
+
+| Customize Panel | Google Apps |
+|:----------------:|:-----------:|
+| ![Customize Panel](assets/screenshots/customize-panel.png) | ![Google Apps](assets/screenshots/google-apps-panel.png) |
 
 ## Technical Details
 
