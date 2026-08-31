@@ -1,6 +1,8 @@
 {
   "searchPlaceholder": { "message": "Search Google or type a URL" },
   "addShortcutTitle": { "message": "Add Shortcut" },
+  "shortcutLimitReached": { "message": "You can add up to 30 shortcuts." },
+  "shortcutSaveError": { "message": "Could not save your changes. Your previous shortcuts are still intact." },
   "editShortcutTitle": { "message": "Edit Shortcut" },
   "addBtnLabel": { "message": "Add" },
   "saveBtnLabel": { "message": "Save" },
@@ -16,5 +18,7 @@
   "menuDelete": { "message": "Delete" },
   "titleLoadingPlaceholder": { "message": "Fetching name..." },
   "titleInputPlaceholder": { "message": "e.g. YouTube" },
-  "aiModeBtnText": { "message": "AI Mode" }
+  "aiModeBtnText": { "message": "AI Mode" },
+  "importInvalidFile": { "message": "This file could not be read as a shortcuts export." },
+  "importConfirm": { "message": "This will replace your current shortcuts. Continue?" }
 }
