@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Tìm kiếm trên Google hoặc nhập URL" },
   "addShortcutTitle": { "message": "Thêm lối tắt" },
-  "editShortcutTitle": { "message": "Chỉnh sửa lối tắt" },
+  "shortcutLimitReached": { "message": "Bạn có thể thêm tối đa 30 lối tắt." },
+  "shortcutSaveError": { "message": "Không thể lưu thay đổi của bạn. Các lối tắt trước đó của bạn vẫn còn nguyên." },
   "addBtnLabel": { "message": "Thêm" },
   "saveBtnLabel": { "message": "Lưu" },
   "cancelBtnLabel": { "message": "Hủy" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Xóa" },
   "titleLoadingPlaceholder": { "message": "Đang lấy tên..." },
   "titleInputPlaceholder": { "message": "vd: YouTube" },
-  "aiModeBtnText": { "message": "Chế độ AI" }
+  "aiModeBtnText": { "message": "Chế độ AI" },
+  "importInvalidFile": { "message": "Không thể đọc tệp này dưới dạng tệp xuất lối tắt." },
+  "importConfirm": { "message": "Thao tác này sẽ thay thế các lối tắt hiện tại của bạn. Tiếp tục?" }
 }

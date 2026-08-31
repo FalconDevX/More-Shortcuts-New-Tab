@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Google 検索または URL を入力" },
   "addShortcutTitle": { "message": "ショートカットを追加" },
-  "editShortcutTitle": { "message": "ショートカットを編集" },
+  "shortcutLimitReached": { "message": "ショートカットは最大30個まで追加できます。" },
+  "shortcutSaveError": { "message": "変更を保存できませんでした。以前のショートカットはそのまま残っています。" },
   "addBtnLabel": { "message": "追加" },
   "saveBtnLabel": { "message": "保存" },
   "cancelBtnLabel": { "message": "キャンセル" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "削除" },
   "titleLoadingPlaceholder": { "message": "名前を取得中..." },
   "titleInputPlaceholder": { "message": "例: YouTube" },
-  "aiModeBtnText": { "message": "AIモード" }
+  "aiModeBtnText": { "message": "AIモード" },
+  "importInvalidFile": { "message": "このファイルはショートカットのエクスポートとして読み込めませんでした。" },
+  "importConfirm": { "message": "現在のショートカットが置き換えられます。続行しますか？" }
 }

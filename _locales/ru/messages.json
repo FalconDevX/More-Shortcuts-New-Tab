@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Поиск в Google или введите URL" },
   "addShortcutTitle": { "message": "Добавить ярлык" },
-  "editShortcutTitle": { "message": "Изменить ярлык" },
+  "shortcutLimitReached": { "message": "Вы можете добавить до 30 ярлыков." },
+  "shortcutSaveError": { "message": "Не удалось сохранить изменения. Ваши предыдущие ярлыки остались без изменений." },
   "addBtnLabel": { "message": "Добавить" },
   "saveBtnLabel": { "message": "Сохранить" },
   "cancelBtnLabel": { "message": "Отмена" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Удалить" },
   "titleLoadingPlaceholder": { "message": "Получение названия..." },
   "titleInputPlaceholder": { "message": "напр. YouTube" },
-  "aiModeBtnText": { "message": "Режим ИИ" }
+  "aiModeBtnText": { "message": "Режим ИИ" },
+  "importInvalidFile": { "message": "Не удалось прочитать этот файл как экспорт ярлыков." },
+  "importConfirm": { "message": "Это заменит ваши текущие ярлыки. Продолжить?" }
 }

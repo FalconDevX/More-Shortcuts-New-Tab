@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Buscar en Google o escribe una URL" },
   "addShortcutTitle": { "message": "Añadir acceso directo" },
-  "editShortcutTitle": { "message": "Editar acceso directo" },
+  "shortcutLimitReached": { "message": "Puedes añadir hasta 30 accesos directos." },
+  "shortcutSaveError": { "message": "No se pudieron guardar los cambios. Tus accesos directos anteriores siguen intactos." },
   "addBtnLabel": { "message": "Añadir" },
   "saveBtnLabel": { "message": "Guardar" },
   "cancelBtnLabel": { "message": "Cancelar" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Eliminar" },
   "titleLoadingPlaceholder": { "message": "Obteniendo nombre..." },
   "titleInputPlaceholder": { "message": "p. ej., YouTube" },
-  "aiModeBtnText": { "message": "Modo IA" }
+  "aiModeBtnText": { "message": "Modo IA" },
+  "importInvalidFile": { "message": "No se pudo leer este archivo como una exportación de accesos directos." },
+  "importConfirm": { "message": "Esto reemplazará tus accesos directos actuales. ¿Continuar?" }
 }

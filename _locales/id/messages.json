@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Cari di Google atau masukkan URL" },
   "addShortcutTitle": { "message": "Tambah Pintasan" },
-  "editShortcutTitle": { "message": "Edit Pintasan" },
+  "shortcutLimitReached": { "message": "Anda dapat menambahkan hingga 30 pintasan." },
+  "shortcutSaveError": { "message": "Perubahan tidak dapat disimpan. Pintasan Anda sebelumnya masih utuh." },
   "addBtnLabel": { "message": "Tambah" },
   "saveBtnLabel": { "message": "Simpan" },
   "cancelBtnLabel": { "message": "Batal" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Hapus" },
   "titleLoadingPlaceholder": { "message": "Mengambil nama..." },
   "titleInputPlaceholder": { "message": "mis. YouTube" },
-  "aiModeBtnText": { "message": "Mode AI" }
+  "aiModeBtnText": { "message": "Mode AI" },
+  "importInvalidFile": { "message": "File ini tidak dapat dibaca sebagai file ekspor pintasan." },
+  "importConfirm": { "message": "Ini akan mengganti pintasan Anda saat ini. Lanjutkan?" }
 }

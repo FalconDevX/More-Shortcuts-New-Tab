@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Google-Suche oder URL eingeben" },
   "addShortcutTitle": { "message": "Verknüpfung hinzufügen" },
-  "editShortcutTitle": { "message": "Verknüpfung bearbeiten" },
+  "shortcutLimitReached": { "message": "Du kannst bis zu 30 Verknüpfungen hinzufügen." },
+  "shortcutSaveError": { "message": "Änderungen konnten nicht gespeichert werden. Deine vorherigen Verknüpfungen sind weiterhin vorhanden." },
   "addBtnLabel": { "message": "Hinzufügen" },
   "saveBtnLabel": { "message": "Speichern" },
   "cancelBtnLabel": { "message": "Abbrechen" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Löschen" },
   "titleLoadingPlaceholder": { "message": "Name wird abgerufen..." },
   "titleInputPlaceholder": { "message": "z. B. YouTube" },
-  "aiModeBtnText": { "message": "KI-Modus" }
+  "aiModeBtnText": { "message": "KI-Modus" },
+  "importInvalidFile": { "message": "Diese Datei konnte nicht als Verknüpfungs-Export gelesen werden." },
+  "importConfirm": { "message": "Dadurch werden deine aktuellen Verknüpfungen ersetzt. Fortfahren?" }
 }

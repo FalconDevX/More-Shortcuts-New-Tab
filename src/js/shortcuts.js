@@ -59,10 +59,7 @@ function createItemEl(item) {
 
   // Suppress the click that would otherwise fire right after a drag/drop.
   a.onclick = (e) => {
-    if (
-      container.classList.contains("dragging") ||
-      container.classList.contains("dropped")
-    ) {
+    if (container.classList.contains("dragging")) {
       e.preventDefault();
     }
   };

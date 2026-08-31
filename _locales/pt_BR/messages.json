@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Pesquisar no Google ou digitar um URL" },
   "addShortcutTitle": { "message": "Adicionar atalho" },
-  "editShortcutTitle": { "message": "Editar atalho" },
+  "shortcutLimitReached": { "message": "Você pode adicionar até 30 atalhos." },
+  "shortcutSaveError": { "message": "Não foi possível salvar suas alterações. Seus atalhos anteriores continuam intactos." },
   "addBtnLabel": { "message": "Adicionar" },
   "saveBtnLabel": { "message": "Salvar" },
   "cancelBtnLabel": { "message": "Cancelar" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Excluir" },
   "titleLoadingPlaceholder": { "message": "Obtendo nome..." },
   "titleInputPlaceholder": { "message": "ex.: YouTube" },
-  "aiModeBtnText": { "message": "Modo IA" }
+  "aiModeBtnText": { "message": "Modo IA" },
+  "importInvalidFile": { "message": "Não foi possível ler este arquivo como uma exportação de atalhos." },
+  "importConfirm": { "message": "Isso substituirá seus atalhos atuais. Continuar?" }
 }

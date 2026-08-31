@@ -1,5 +1,4 @@
 const MAX_USER_WALLPAPERS = 8;
-const MAX_DEFAULT_WALLPAPERS = 100;
 const MAX_WALLPAPER_EDGE = 1920;
 const WALLPAPER_THUMB_SIZE = 160;
 const MAX_WALLPAPER_DATA_URL_LENGTH = 700 * 1024;
@@ -270,6 +269,7 @@ function initCustomize() {
   });
 
   initializeWallpaperGallery();
+  pruneStaleWallpaperThumbnails();
 }
 
 async function initializeWallpaperGallery() {
@@ -559,23 +559,12 @@ async function createOptimizedWallpaper(source) {
   return { full, thumbnail };
 }
 
-async function wallpaperExists(url) {
-  try {
-    const response = await fetch(url, { method: "HEAD" });
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
+const DEFAULT_WALLPAPER_FILES = ["1.jpg", "2.jpg", "3.jpg"];
 
 async function getDefaultWallpapers() {
-  const wallpapers = [];
-  for (let index = 1; index <= MAX_DEFAULT_WALLPAPERS; index += 1) {
-    const full = chrome.runtime.getURL(`assets/wallpapers/${index}.jpg`);
-    if (!(await wallpaperExists(full))) break;
-    wallpapers.push({ full });
-  }
-  return wallpapers;
+  return DEFAULT_WALLPAPER_FILES.map((filename) => ({
+    full: chrome.runtime.getURL(`assets/wallpapers/${filename}`),
+  }));
 }
 
 async function getUserWallpapers() {
@@ -623,6 +612,16 @@ async function getDefaultWallpaperThumbnail(wallpaper) {
   const thumbnail = await resizeImage(wallpaper.full, WALLPAPER_THUMB_SIZE, 0.72);
   await chrome.storage.local.set({ [key]: thumbnail });
   return thumbnail;
+}
+
+async function pruneStaleWallpaperThumbnails() {
+  const version = chrome.runtime.getManifest().version;
+  const currentPrefix = `wallpaperThumb_${version}_`;
+  const all = await chrome.storage.local.get(null);
+  const staleKeys = Object.keys(all).filter(
+    (key) => key.startsWith("wallpaperThumb_") && !key.startsWith(currentPrefix),
+  );
+  if (staleKeys.length) await chrome.storage.local.remove(staleKeys);
 }
 
 function createWallpaperThumb(wallpaper, currentBg) {

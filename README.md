@@ -161,7 +161,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
   - `favicon`: display website favicons
   - `search`: run searches through Chrome's default search engine
   - `host_permissions` (`<all_urls>`): fetch page titles and favicons for the sites you add
-- **Storage**: Chrome Sync Storage (syncs across devices when signed in)
+- **Storage**: shortcuts sync across devices via Chrome Sync Storage when signed in; theme, wallpaper, and other display preferences are stored locally per browser and do not sync
 - **No External Dependencies**: all fonts (Inter, Material Icons) are bundled locally
 
 ## File Structure

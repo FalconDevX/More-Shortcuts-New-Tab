@@ -1,7 +1,8 @@
 {
   "searchPlaceholder": { "message": "Rechercher sur Google ou saisir une URL" },
   "addShortcutTitle": { "message": "Ajouter un raccourci" },
-  "editShortcutTitle": { "message": "Modifier le raccourci" },
+  "shortcutLimitReached": { "message": "Vous pouvez ajouter jusqu'à 30 raccourcis." },
+  "shortcutSaveError": { "message": "Impossible d'enregistrer vos modifications. Vos raccourcis précédents sont toujours intacts." },
   "addBtnLabel": { "message": "Ajouter" },
   "saveBtnLabel": { "message": "Enregistrer" },
   "cancelBtnLabel": { "message": "Annuler" },
@@ -16,5 +17,7 @@
   "menuDelete": { "message": "Supprimer" },
   "titleLoadingPlaceholder": { "message": "Récupération du nom..." },
   "titleInputPlaceholder": { "message": "p. ex. YouTube" },
-  "aiModeBtnText": { "message": "Mode IA" }
+  "aiModeBtnText": { "message": "Mode IA" },
+  "importInvalidFile": { "message": "Ce fichier n'a pas pu être lu comme un export de raccourcis." },
+  "importConfirm": { "message": "Cela remplacera vos raccourcis actuels. Continuer ?" }
 }
