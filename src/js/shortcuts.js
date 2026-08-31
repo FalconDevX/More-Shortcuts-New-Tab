@@ -27,7 +27,6 @@ function renderGrid() {
       pageDiv.appendChild(createItemEl(item));
     });
 
-    // Add the "+" button to the last page if there's room.
     if (
       shortcuts.length < MAX_SHORTCUTS &&
       i === totalPages - 1 &&
@@ -38,7 +37,6 @@ function renderGrid() {
 
     wrapper.appendChild(pageDiv);
 
-    // Pagination dots only show once there's more than one page.
     if (totalPages > 1) {
       const dot = document.createElement("div");
       dot.className = `dot ${i === currentPage ? "active" : ""}`;

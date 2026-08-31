@@ -500,7 +500,6 @@ function updateRangeFill(input) {
   input.style.background = `linear-gradient(to right, var(--slider-fill) ${pct}%, var(--slider-track) ${pct}%)`;
 }
 
-// --- Preset wallpapers ---
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
