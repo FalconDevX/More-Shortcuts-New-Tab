@@ -1,7 +1,8 @@
 # More Shortcuts New Tab
 
 <p align="center">
-  <img src="https://img.shields.io/github/manifest-json/v/FalconDevX/More-Shortcuts-New-Tab?filename=manifest.json&label=version&color=blue" alt="Version">
+  <a href="https://chromewebstore.google.com/detail/more-shortcuts-new-tab/kogaidjbbpniklkafmfbgmihfdmkjkaf?hl=en-US"><img src="https://img.shields.io/chrome-web-store/v/kogaidjbbpniklkafmfbgmihfdmkjkaf?label=Chrome%20Web%20Store" alt="Chrome Web Store"></a>
+  <a href="https://chromewebstore.google.com/detail/more-shortcuts-new-tab/kogaidjbbpniklkafmfbgmihfdmkjkaf?hl=en-US"><img src="https://img.shields.io/chrome-web-store/users/kogaidjbbpniklkafmfbgmihfdmkjkaf?label=users" alt="Users"></a>
   <img src="https://img.shields.io/badge/manifest-v3-blue" alt="Manifest V3">
   <img src="https://img.shields.io/github/license/FalconDevX/More-Shortcuts-New-Tab" alt="License">
   <img src="https://img.shields.io/github/last-commit/FalconDevX/More-Shortcuts-New-Tab" alt="Last commit">
@@ -61,7 +62,7 @@
 ## Installation
 
 ### From Chrome Web Store
-> Coming soon!
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/more-shortcuts-new-tab/kogaidjbbpniklkafmfbgmihfdmkjkaf?hl=en-US).
 
 ### Manual Installation (Developer Mode)
 
@@ -110,16 +111,47 @@
 ## Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/new-tab-dark.png" alt="New tab page" width="800">
+  <img src="assets/screenshots/new-tab-dark.png" alt="New tab page" width="800"><br>
+  <sub><strong>New tab page</strong></sub>
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/header-bar.png" alt="Google apps bar" width="700">
+  <img src="assets/screenshots/header-bar.png" alt="Google apps bar" width="700"><br>
+  <sub><strong>Google apps bar</strong></sub>
 </p>
 
-| Customize Panel | Google Apps |
-|:----------------:|:-----------:|
-| ![Customize Panel](assets/screenshots/customize-panel.png) | ![Google Apps](assets/screenshots/google-apps-panel.png) |
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/screenshots/customize-panel.png" alt="Customize panel" width="260"><br>
+      <sub><strong>Customize panel</strong></sub>
+    </td>
+    <td align="center">
+      <img src="assets/screenshots/google-apps-panel.png" alt="Google apps panel" width="260"><br>
+      <sub><strong>Choose & reorder Google apps</strong></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/screenshots/full-dark.png" alt="Dark theme" width="380"><br>
+      <sub><strong>Dark theme</strong></sub>
+    </td>
+    <td align="center">
+      <img src="assets/screenshots/full-light.png" alt="Light theme" width="380"><br>
+      <sub><strong>Light theme</strong></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/screenshots/basic-dark.png" alt="Dark theme, empty state" width="380"><br>
+      <sub><strong>Dark theme, empty state</strong></sub>
+    </td>
+    <td align="center">
+      <img src="assets/screenshots/basic-light.png" alt="Light theme, empty state" width="380"><br>
+      <sub><strong>Light theme, empty state</strong></sub>
+    </td>
+  </tr>
+</table>
 
 ## Technical Details
 
