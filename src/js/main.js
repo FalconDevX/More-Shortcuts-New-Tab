@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initShortcuts();
   setupSearch();
   setupAddModal();
+  setupFolderModal();
   setupChromeImport();
 
   document.addEventListener("click", (e) => {
