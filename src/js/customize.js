@@ -182,10 +182,16 @@ function initCustomize() {
   const themePicker = document.getElementById("themePicker");
   const themeOptions = document.getElementById("themeOptions");
   const reverseSearchColors = document.getElementById("reverseSearchColors");
+  const use24HourClock = document.getElementById("use24HourClock");
   const colorThemeOptions = document.getElementById("colorThemeOptions");
   const backgroundInput = document.getElementById("backgroundInput");
   const removeBackgroundBtn = document.getElementById("removeBackgroundBtn");
   const backgroundDim = document.getElementById("backgroundDim");
+  const urlBackgroundBtn = document.getElementById("urlBackgroundBtn");
+  const wallpaperUrlForm = document.getElementById("wallpaperUrlForm");
+  const wallpaperUrlInput = document.getElementById("wallpaperUrlInput");
+  const wallpaperUrlSubmitBtn = document.getElementById("wallpaperUrlSubmitBtn");
+  const wallpaperUrlError = document.getElementById("wallpaperUrlError");
   const exportShortcutsBtn = document.getElementById("exportShortcutsBtn");
   const importShortcutsInput = document.getElementById("importShortcutsInput");
 
@@ -197,6 +203,11 @@ function initCustomize() {
   });
 
   closeBtn.addEventListener("click", () => {
+    if (wallpaperUrlForm && !wallpaperUrlForm.hidden) {
+      wallpaperUrlForm.hidden = true;
+      urlBackgroundBtn.classList.remove("active");
+      urlBackgroundBtn.setAttribute("aria-expanded", "false");
+    }
     customizeDialog.close();
   });
 
@@ -215,6 +226,7 @@ function initCustomize() {
     setPref("themeMode", mode);
     setThemePickerValue(mode);
     applyTheme(mode);
+    reapplyDefaultColorTheme();
 
     themeOptions.hidden = true;
     themeSelect.setAttribute("aria-expanded", "false");
@@ -241,12 +253,24 @@ function initCustomize() {
     document.body.classList.toggle("reverse-search-colors", enabled);
   });
 
-  const savedColorTheme = getPrefSync("colorTheme", "neutral");
+  if (use24HourClock) {
+    use24HourClock.checked = getPrefSync("use24HourClock", "false") === "true";
+    use24HourClock.addEventListener("change", () => {
+      setPref("use24HourClock", String(use24HourClock.checked));
+      updateClock();
+    });
+  }
+
+  // Use the stored value if the user has explicitly saved one; otherwise fall
+  // back to a theme-aware default (black for light, neutral for dark).
+  const storedColorTheme = localStorage.getItem("colorTheme");
+  const defaultColorTheme = getDefaultColorTheme();
+  const savedColorTheme = storedColorTheme ?? defaultColorTheme;
   const savedSwatch = colorThemeOptions.querySelector(
     `[data-theme-color="${savedColorTheme}"]`,
   );
   applyColorTheme(
-    savedSwatch ? savedColorTheme : "neutral",
+    savedSwatch ? savedColorTheme : defaultColorTheme,
     savedSwatch?.dataset.color || "",
   );
 
@@ -282,28 +306,38 @@ function initCustomize() {
   });
 
   backgroundInput.addEventListener("change", async () => {
-    const file = backgroundInput.files[0];
+    const files = Array.from(backgroundInput.files || []);
 
-    if (!file) return;
+    if (!files.length) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Image is too large. Maximum size is 5 MB.");
+    const oversizedFiles = files.filter((f) => f.size > 5 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      alert(t.imageTooLarge || "Image is too large. Maximum size is 5 MB.");
+      backgroundInput.value = "";
       return;
     }
 
     setWallpaperGalleryLoading(true);
 
+    let lastProcessedWallpaper = null;
+
     try {
-      const source = await readFileAsDataUrl(file);
-      const wallpaper = await createOptimizedWallpaper(source);
-      await chrome.storage.local.set({ customBackground: wallpaper.full });
-      await saveUserWallpaper(wallpaper);
-      applyBackground(wallpaper.full);
+      for (const file of files) {
+        const source = await readFileAsDataUrl(file);
+        const wallpaper = await createOptimizedWallpaper(source);
+        await saveUserWallpaper(wallpaper);
+        lastProcessedWallpaper = wallpaper;
+      }
+
+      if (lastProcessedWallpaper) {
+        await chrome.storage.local.set({ customBackground: lastProcessedWallpaper.full });
+        applyBackground(lastProcessedWallpaper.full);
+      }
       await renderWallpaperGallery();
     } catch (error) {
       console.error("Could not process wallpaper:", error);
       setWallpaperGalleryLoading(false);
-      alert("Could not save this image.");
+      alert(t.imageSaveError || "Could not save this image.");
     }
 
     // Allow re-selecting the same file later (e.g. after removing it)
@@ -316,6 +350,89 @@ function initCustomize() {
     await chrome.storage.local.remove("customBackground");
 
     await renderWallpaperGallery();
+  });
+
+  // --- URL wallpaper form ---
+
+  function setUrlFormOpen(open) {
+    wallpaperUrlForm.hidden = !open;
+    urlBackgroundBtn.classList.toggle("active", open);
+    urlBackgroundBtn.setAttribute("aria-expanded", String(open));
+    if (open) {
+      wallpaperUrlInput.value = "";
+      showUrlError(null);
+      wallpaperUrlInput.focus();
+    }
+  }
+
+  function showUrlError(msg) {
+    if (msg) {
+      wallpaperUrlError.textContent = msg;
+      wallpaperUrlError.hidden = false;
+    } else {
+      wallpaperUrlError.hidden = true;
+      wallpaperUrlError.textContent = "";
+    }
+  }
+
+  urlBackgroundBtn.addEventListener("click", () => {
+    const isOpen = !wallpaperUrlForm.hidden;
+    setUrlFormOpen(!isOpen);
+  });
+
+  async function submitWallpaperUrl() {
+    const raw = wallpaperUrlInput.value.trim();
+
+    if (!raw) {
+      showUrlError(t.invalidImageUrl || "Please enter a valid image URL.");
+      wallpaperUrlInput.focus();
+      return;
+    }
+
+    // Basic URL format check
+    let url;
+    try {
+      url = new URL(raw);
+      if (url.protocol !== "https:" && url.protocol !== "http:") {
+        throw new Error("Invalid protocol");
+      }
+    } catch {
+      showUrlError(t.invalidImageUrl || "Please enter a valid image URL.");
+      wallpaperUrlInput.focus();
+      return;
+    }
+
+    showUrlError(null);
+    setWallpaperGalleryLoading(true);
+    wallpaperUrlSubmitBtn.disabled = true;
+
+    try {
+      const dataUrl = await fetchImageAsDataUrl(url.href);
+      const wallpaper = await createOptimizedWallpaper(dataUrl);
+      await chrome.storage.local.set({ customBackground: wallpaper.full });
+      await saveUserWallpaper(wallpaper);
+      applyBackground(wallpaper.full);
+      setUrlFormOpen(false);
+      await renderWallpaperGallery();
+    } catch (error) {
+      console.error("Could not load wallpaper from URL:", error);
+      setWallpaperGalleryLoading(false);
+      showUrlError(t.imageFetchError || "Could not load image from URL.");
+      wallpaperUrlInput.focus();
+    } finally {
+      wallpaperUrlSubmitBtn.disabled = false;
+    }
+  }
+
+  wallpaperUrlSubmitBtn.addEventListener("click", submitWallpaperUrl);
+
+  wallpaperUrlInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      submitWallpaperUrl();
+    } else if (event.key === "Escape") {
+      setUrlFormOpen(false);
+    }
   });
 
   setupAppProvider("google");
@@ -368,6 +485,25 @@ function setAppVisibility(provider, app, isVisible) {
   if (link) link.hidden = !isVisible;
 }
 
+// Returns the appropriate default color theme name based on the current
+// actual theme (light → "black" for better contrast, dark → "neutral").
+// Only used when the user has not explicitly saved a colorTheme preference.
+function getDefaultColorTheme() {
+  const actualTheme = document.body.getAttribute("data-theme") || "dark";
+  return actualTheme === "light" ? "black" : "neutral";
+}
+
+// Re-applies the default color theme when no explicit colorTheme pref is
+// saved and the active theme (light/dark) has just changed.
+function reapplyDefaultColorTheme() {
+  if (localStorage.getItem("colorTheme") !== null) return;
+
+  const name = getDefaultColorTheme();
+  const colorThemeOptions = document.getElementById("colorThemeOptions");
+  const swatch = colorThemeOptions?.querySelector(`[data-theme-color="${name}"]`);
+  applyColorTheme(name, swatch?.dataset.color || "");
+}
+
 function applyColorTheme(name, color) {
   const isNeutral = name === "neutral";
   document.body.classList.toggle("has-color-theme", !isNeutral);
@@ -396,6 +532,9 @@ function applyChangedPref(key, value) {
   if (key === "themeMode") {
     applyTheme(value);
     setThemePickerValue(value);
+    // If the user has never explicitly chosen a color theme, re-evaluate the
+    // theme-aware default now that the active theme may have changed.
+    reapplyDefaultColorTheme();
     return;
   }
 
@@ -449,6 +588,19 @@ function applyChangedPref(key, value) {
       setAppVisibility(provider, app, isVisible);
       return;
     }
+  }
+
+  if (key === "use24HourClock") {
+    const enabled = value === "true";
+    const toggle = document.getElementById("use24HourClock");
+    if (toggle) toggle.checked = enabled;
+    updateClock();
+    return;
+  }
+
+  if (key === "language") {
+    applyLocalization();
+    return;
   }
 }
 
@@ -660,6 +812,30 @@ function readFileAsDataUrl(file) {
   });
 }
 
+// Fetches a remote image URL and converts it to a data URL, leveraging
+// the extension's <all_urls> host_permissions so cross-origin images work.
+async function fetchImageAsDataUrl(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.startsWith("image/")) {
+    throw new Error(`Not an image (${contentType})`);
+  }
+
+  const blob = await response.blob();
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -700,20 +876,27 @@ async function resizeImage(
 }
 
 async function createOptimizedWallpaper(source) {
-  const full = await resizeImage(
-    source,
-    MAX_WALLPAPER_EDGE,
-    0.82,
-    MAX_WALLPAPER_DATA_URL_LENGTH,
-  );
-  const thumbnail = await resizeImage(full, WALLPAPER_THUMB_SIZE, 0.72);
-  return { full, thumbnail };
+  try {
+    const full = await resizeImage(
+      source,
+      MAX_WALLPAPER_EDGE,
+      0.82,
+      MAX_WALLPAPER_DATA_URL_LENGTH,
+    );
+    const thumbnail = await resizeImage(full, WALLPAPER_THUMB_SIZE, 0.72);
+    return { full, thumbnail };
+  } catch (error) {
+    console.warn("Could not optimize wallpaper:", error);
+    return { full: source, thumbnail: source };
+  }
 }
 
 const DEFAULT_WALLPAPER_FILES = [
   "1.jpg",
   "2.jpg",
   "3.jpg",
+  "4.jpg",
+  "5.jpg",
   "4-mountain-lake.png",
   "5-desert-canyon.png",
 ];
@@ -725,26 +908,49 @@ async function getDefaultWallpapers() {
 }
 
 async function getUserWallpapers() {
-  const result = await chrome.storage.local.get("userWallpapers");
-  const stored = result.userWallpapers ?? [];
-  const normalized = await Promise.all(
-    stored.map(async (item) =>
-      typeof item === "string" ? createOptimizedWallpaper(item) : item,
-    ),
-  );
-  if (stored.some((item) => typeof item === "string")) {
-    await chrome.storage.local.set({ userWallpapers: normalized });
+  try {
+    const result = await chrome.storage.local.get("userWallpapers");
+    const stored = (result.userWallpapers ?? []).filter(Boolean);
+    const normalized = (
+      await Promise.all(
+        stored.map(async (item) => {
+          try {
+            if (typeof item === "string") return await createOptimizedWallpaper(item);
+            if (item && item.full) {
+              return {
+                full: item.full,
+                thumbnail: item.thumbnail || item.full,
+              };
+            }
+            return null;
+          } catch {
+            return null;
+          }
+        }),
+      )
+    ).filter(Boolean);
+
+    if (stored.some((item) => typeof item === "string")) {
+      await chrome.storage.local.set({ userWallpapers: normalized });
+    }
+    return normalized;
+  } catch (error) {
+    console.error("Could not get user wallpapers:", error);
+    return [];
   }
-  return normalized;
 }
 
 async function saveUserWallpaper(wallpaper) {
-  let wallpapers = await getUserWallpapers();
-  wallpapers = wallpapers.filter((item) => item.full !== wallpaper.full);
-  wallpapers.unshift(wallpaper);
-  wallpapers = wallpapers.slice(0, MAX_USER_WALLPAPERS);
+  try {
+    let wallpapers = await getUserWallpapers();
+    wallpapers = wallpapers.filter((item) => item.full !== wallpaper.full);
+    wallpapers.unshift(wallpaper);
+    wallpapers = wallpapers.slice(0, MAX_USER_WALLPAPERS);
 
-  await chrome.storage.local.set({ userWallpapers: wallpapers });
+    await chrome.storage.local.set({ userWallpapers: wallpapers });
+  } catch (error) {
+    console.error("Could not save user wallpaper:", error);
+  }
 }
 
 function setWallpaperGalleryLoading(isLoading) {
@@ -761,33 +967,48 @@ async function selectWallpaper(url) {
 }
 
 async function getDefaultWallpaperThumbnail(wallpaper) {
-  const version = chrome.runtime.getManifest().version;
-  const filename = wallpaper.full.split("/").pop();
-  const key = `wallpaperThumb_${version}_${filename}`;
-  const cached = await chrome.storage.local.get(key);
-  if (cached[key]) return cached[key];
-  const thumbnail = await resizeImage(wallpaper.full, WALLPAPER_THUMB_SIZE, 0.72);
-  await chrome.storage.local.set({ [key]: thumbnail });
-  return thumbnail;
+  if (!wallpaper || !wallpaper.full) return "";
+  try {
+    const manifest = chrome.runtime.getManifest ? chrome.runtime.getManifest() : { version: "1" };
+    const version = manifest.version;
+    const filename = wallpaper.full.split("/").pop();
+    const key = `wallpaperThumb_${version}_${filename}`;
+    const cached = await chrome.storage.local.get(key);
+    if (cached[key]) return cached[key];
+    const thumbnail = await resizeImage(wallpaper.full, WALLPAPER_THUMB_SIZE, 0.72);
+    await chrome.storage.local.set({ [key]: thumbnail });
+    return thumbnail;
+  } catch (error) {
+    console.warn("Could not generate default thumbnail, using original image:", error);
+    return wallpaper.full;
+  }
 }
 
 async function pruneStaleWallpaperThumbnails() {
-  const version = chrome.runtime.getManifest().version;
-  const currentPrefix = `wallpaperThumb_${version}_`;
-  const all = await chrome.storage.local.get(null);
-  const staleKeys = Object.keys(all).filter(
-    (key) => key.startsWith("wallpaperThumb_") && !key.startsWith(currentPrefix),
-  );
-  if (staleKeys.length) await chrome.storage.local.remove(staleKeys);
+  try {
+    const manifest = chrome.runtime.getManifest ? chrome.runtime.getManifest() : { version: "1" };
+    const version = manifest.version;
+    const currentPrefix = `wallpaperThumb_${version}_`;
+    const all = await chrome.storage.local.get(null);
+    const staleKeys = Object.keys(all).filter(
+      (key) => key.startsWith("wallpaperThumb_") && !key.startsWith(currentPrefix),
+    );
+    if (staleKeys.length) await chrome.storage.local.remove(staleKeys);
+  } catch (error) {
+    console.warn("Could not prune stale thumbnails:", error);
+  }
 }
 
 function createWallpaperThumb(wallpaper, currentBg) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "wallpaper-thumb";
-  btn.style.backgroundImage = `url("${wallpaper.thumbnail}")`;
+  const thumbUrl = wallpaper?.thumbnail || wallpaper?.full || "";
+  btn.style.backgroundImage = `url("${thumbUrl}")`;
   btn.title = "Use this wallpaper";
-  if (currentBg && currentBg.includes(wallpaper.full)) btn.classList.add("active");
+  if (currentBg && wallpaper?.full && currentBg.includes(wallpaper.full)) {
+    btn.classList.add("active");
+  }
   btn.addEventListener("click", () => selectWallpaper(wallpaper.full));
   return btn;
 }
@@ -841,49 +1062,58 @@ async function renderWallpaperGallery() {
   const gallery = document.getElementById("wallpaperGallery");
   if (!gallery) return;
 
-  const currentBg = document.body.style.backgroundImage;
+  try {
+    const currentBg = document.body.style.backgroundImage;
 
-  const [defaultSources, userWallpapers] = await Promise.all([
-    getDefaultWallpapers(),
-    getUserWallpapers(),
-  ]);
-  const defaults = await Promise.all(
-    defaultSources.map(async (wallpaper) => ({
-      ...wallpaper,
-      thumbnail: await getDefaultWallpaperThumbnail(wallpaper),
-    })),
-  );
-
-  gallery.replaceChildren();
-  gallery.classList.remove("loading");
-
-  if (defaults.length) {
-    gallery.appendChild(createWallpaperGroupLabel("Default presets"));
-    const row = document.createElement("div");
-    row.className = "wallpaper-row";
-    defaults.forEach((wallpaper) =>
-      row.appendChild(createWallpaperThumb(wallpaper, currentBg)),
+    const [defaultSources, userWallpapers] = await Promise.all([
+      getDefaultWallpapers(),
+      getUserWallpapers(),
+    ]);
+    const defaults = await Promise.all(
+      defaultSources.map(async (wallpaper) => ({
+        ...wallpaper,
+        thumbnail: await getDefaultWallpaperThumbnail(wallpaper),
+      })),
     );
-    gallery.appendChild(row);
-  }
 
-  if (userWallpapers.length) {
-    gallery.appendChild(
-      createWallpaperGroupLabel(
-        `Your presets (${userWallpapers.length}/${MAX_USER_WALLPAPERS})`,
-      ),
-    );
-    const row = document.createElement("div");
-    row.className = "wallpaper-row";
-    userWallpapers.forEach((wallpaper) =>
-      row.appendChild(createUserWallpaperThumb(wallpaper, currentBg)),
-    );
-    gallery.appendChild(row);
-  }
+    gallery.replaceChildren();
+    gallery.classList.remove("loading");
 
-  if (!defaults.length && !userWallpapers.length) {
-    gallery.style.display = "none";
-  } else {
-    gallery.style.display = "";
+    const validDefaults = defaults.filter((w) => w && w.full);
+    if (validDefaults.length) {
+      const defaultLabel = (typeof t !== "undefined" && t.defaultPresets) || "Default presets";
+      gallery.appendChild(createWallpaperGroupLabel(defaultLabel));
+      const row = document.createElement("div");
+      row.className = "wallpaper-row";
+      validDefaults.forEach((wallpaper) =>
+        row.appendChild(createWallpaperThumb(wallpaper, currentBg)),
+      );
+      gallery.appendChild(row);
+    }
+
+    const validUserWallpapers = userWallpapers.filter((w) => w && w.full);
+    if (validUserWallpapers.length) {
+      const yourPresetsText = (typeof t !== "undefined" && t.yourPresets) || "Your presets";
+      gallery.appendChild(
+        createWallpaperGroupLabel(
+          `${yourPresetsText} (${validUserWallpapers.length}/${MAX_USER_WALLPAPERS})`,
+        ),
+      );
+      const row = document.createElement("div");
+      row.className = "wallpaper-row";
+      validUserWallpapers.forEach((wallpaper) =>
+        row.appendChild(createUserWallpaperThumb(wallpaper, currentBg)),
+      );
+      gallery.appendChild(row);
+    }
+
+    if (!validDefaults.length && !validUserWallpapers.length) {
+      gallery.style.display = "none";
+    } else {
+      gallery.style.display = "";
+    }
+  } catch (error) {
+    console.error("Could not render wallpaper gallery:", error);
+    gallery.classList.remove("loading");
   }
 }

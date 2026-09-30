@@ -131,18 +131,18 @@
 
     <dialog id="addModal">
         <form id="addForm" method="dialog">
-            <h3 id="modalHeader">Add Shortcut</h3>
+            <h3 id="modalHeader" data-i18n="modalHeaderAdd">Add Shortcut</h3>
             <div class="input-group">
-                <label for="modalUrl">URL</label>
+                <label for="modalUrl" data-i18n="urlLabel">URL</label>
                 <input type="text" inputmode="url" id="modalUrl" placeholder="https://" required autofocus>
             </div>
             <div class="input-group">
-                <label for="modalTitle">Name</label>
+                <label for="modalTitle" data-i18n="nameLabel">Name</label>
                 <input type="text" id="modalTitle" placeholder="e.g. YouTube" maxlength="40" required>
             </div>
             <div class="modal-actions">
-                <button type="button" id="cancelBtn">Cancel</button>
-                <button type="submit" class="primary" id="submitBtn">Add</button>
+                <button type="button" id="cancelBtn" data-i18n="cancelBtnLabel">Cancel</button>
+                <button type="submit" class="primary" id="submitBtn" data-i18n="addBtnLabel">Add</button>
             </div>
         </form>
     </dialog>
@@ -160,7 +160,7 @@
     <dialog id="customizeModal" class="customize-modal">
         <div class="customize-content">
             <div class="customize-header">
-                <h3>Customize</h3>
+                <h3 data-i18n="customizeModalTitle">Customize</h3>
 
                 <button id="closeCustomizeBtn" class="icon-btn">
                     <span class="material-icons">close</span>
@@ -168,25 +168,52 @@
             </div>
 
             <div class="customize-section">
-                <label for="themeSelect">Theme</label>
+                <label for="themeSelect" data-i18n="themeLabel">Theme</label>
 
                 <div class="theme-picker" id="themePicker">
                     <button id="themeSelect" class="theme-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-                        <span id="themeSelectValue">System</span>
+                        <span id="themeSelectValue" data-i18n="themeSystem">System</span>
                         <span class="material-icons theme-picker-arrow">expand_more</span>
                     </button>
                     <div class="theme-picker-options" id="themeOptions" role="listbox" hidden>
-                        <button type="button" role="option" data-value="system">System</button>
-                        <button type="button" role="option" data-value="light">Light</button>
-                        <button type="button" role="option" data-value="dark">Dark</button>
+                        <button type="button" role="option" data-value="system" data-i18n="themeSystem">System</button>
+                        <button type="button" role="option" data-value="light" data-i18n="themeLight">Light</button>
+                        <button type="button" role="option" data-value="dark" data-i18n="themeDark">Dark</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customize-section">
+                <label for="languageSelect" data-i18n="languageLabel">Language</label>
+
+                <div class="theme-picker" id="languagePicker">
+                    <button id="languageSelect" class="theme-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        <span id="languageSelectValue">Auto</span>
+                        <span class="material-icons theme-picker-arrow">expand_more</span>
+                    </button>
+                    <div class="theme-picker-options" id="languageOptions" role="listbox" hidden>
+                        <button type="button" role="option" data-value="auto" data-i18n="languageAuto">Auto</button>
+                        <button type="button" role="option" data-value="ko">한국어</button>
+                        <button type="button" role="option" data-value="en">English</button>
+                        <button type="button" role="option" data-value="hi">हिन्दी</button>
+                        <button type="button" role="option" data-value="uk">Українська</button>
+                        <button type="button" role="option" data-value="ru">Русский</button>
+                        <button type="button" role="option" data-value="ja">日本語</button>
+                        <button type="button" role="option" data-value="de">Deutsch</button>
+                        <button type="button" role="option" data-value="fr">Français</button>
+                        <button type="button" role="option" data-value="es">Español</button>
+                        <button type="button" role="option" data-value="pt_BR">Português (Brasil)</button>
+                        <button type="button" role="option" data-value="zh_CN">简体中文</button>
+                        <button type="button" role="option" data-value="vi">Tiếng Việt</button>
+                        <button type="button" role="option" data-value="id">Bahasa Indonesia</button>
                     </div>
                 </div>
             </div>
 
             <div class="customize-section customize-toggle-row">
                 <div>
-                    <label for="reverseSearchColors">Reverse search bar colors</label>
-                    <span class="customize-hint">Use the opposite color scheme for the search bar</span>
+                    <label for="reverseSearchColors" data-i18n="reverseSearchColorsLabel">Reverse search bar colors</label>
+                    <span class="customize-hint" data-i18n="reverseSearchColorsHint">Use the opposite color scheme for the search bar</span>
                 </div>
                 <label class="toggle-switch" for="reverseSearchColors">
                     <input type="checkbox" id="reverseSearchColors">
@@ -194,8 +221,19 @@
                 </label>
             </div>
 
+            <div class="customize-section customize-toggle-row">
+                <div>
+                    <label for="use24HourClock" data-i18n="use24HourClockLabel">Use 24-hour clock</label>
+                    <span class="customize-hint" data-i18n="use24HourClockHint">Show time in 24-hour format instead of AM/PM</span>
+                </div>
+                <label class="toggle-switch" for="use24HourClock">
+                    <input type="checkbox" id="use24HourClock">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
             <div class="customize-section">
-                <label>Color theme</label>
+                <label data-i18n="colorThemeLabel">Color theme</label>
                 <div class="color-theme-grid" id="colorThemeOptions" aria-label="Color theme">
                     <button type="button" class="color-theme-swatch neutral" data-theme-color="neutral" data-color="" title="Neutral" aria-label="Neutral"></button>
                     <button type="button" class="color-theme-swatch" data-theme-color="black" data-color="#111111" title="Black" aria-label="Black"></button>
@@ -215,31 +253,63 @@
             </div>
 
             <div class="customize-section">
-                <label>Background</label>
+                <label data-i18n="backgroundSectionLabel">Background</label>
 
                 <div class="wallpaper-gallery" id="wallpaperGallery"></div>
 
                 <div class="upload-row">
                     <label for="backgroundInput" class="customize-btn">
                         <span class="material-icons">upload</span>
-                        Upload
+                        <span data-i18n="uploadBackgroundLabel">Upload</span>
                     </label>
                     <input
                             type="file"
                             id="backgroundInput"
                             accept="image/*"
+                            multiple
                             hidden
                     >
 
+                    <button id="urlBackgroundBtn" class="customize-btn" type="button" aria-expanded="false">
+                        <span class="material-icons">link</span>
+                        <span data-i18n="urlBackgroundLabel">URL</span>
+                    </button>
+
                     <button id="removeBackgroundBtn" class="customize-btn" type="button">
                         <span class="material-icons">delete_outline</span>
-                        Remove
+                        <span data-i18n="removeBackgroundLabel">Remove</span>
                     </button>
+                </div>
+
+                <div class="wallpaper-url-form" id="wallpaperUrlForm" hidden>
+                    <div class="wallpaper-url-input-wrap">
+                        <span class="material-icons wallpaper-url-icon">link</span>
+                        <input
+                                type="url"
+                                id="wallpaperUrlInput"
+                                data-i18n-placeholder="urlBackgroundPlaceholder"
+                                placeholder="Enter image URL (https://...)"
+                                spellcheck="false"
+                                autocomplete="off"
+                        >
+                        <button
+                                type="button"
+                                id="wallpaperUrlSubmitBtn"
+                                class="wallpaper-url-submit-btn"
+                                data-i18n-title="urlBackgroundApply"
+                                data-i18n-aria-label="urlBackgroundApply"
+                                title="Apply"
+                                aria-label="Apply"
+                        >
+                            <span class="material-icons">arrow_forward</span>
+                        </button>
+                    </div>
+                    <div class="wallpaper-url-error" id="wallpaperUrlError" hidden></div>
                 </div>
             </div>
 
             <div class="customize-section">
-                <label for="backgroundDim">
+                <label for="backgroundDim" data-i18n="backgroundDimLabel">
                     Wallpaper darkness
                 </label>
 
@@ -254,8 +324,8 @@
 
             <div class="customize-section customize-toggle-row">
                 <div>
-                    <label for="hideAllGoogleApps">Show Google apps</label>
-                    <span class="customize-hint">Show or hide the Google app shortcuts in the header</span>
+                    <label for="hideAllGoogleApps" data-i18n="showGoogleAppsLabel">Show Google apps</label>
+                    <span class="customize-hint" data-i18n="showGoogleAppsHint">Show or hide the Google app shortcuts in the header</span>
                 </div>
                 <label class="toggle-switch" for="hideAllGoogleApps">
                     <input type="checkbox" id="hideAllGoogleApps" checked>
@@ -264,13 +334,13 @@
             </div>
 
             <div class="customize-section">
-                <label>Google apps</label>
-                <span class="customize-hint">Choose which Google app shortcuts appear in the header, and reorder them</span>
+                <label data-i18n="googleAppsSectionLabel">Google apps</label>
+                <span class="customize-hint" data-i18n="googleAppsSectionHint">Choose which Google app shortcuts appear in the header, and reorder them</span>
 
                 <div class="upload-row">
                     <button id="editGoogleAppsBtn" class="customize-btn" type="button">
                         <span class="material-icons">tune</span>
-                        Edit
+                        <span data-i18n="editGoogleAppsBtn">Edit</span>
                     </button>
                 </div>
             </div>
@@ -299,18 +369,18 @@
             </div>
 
             <div class="customize-section">
-                <label>Shortcuts</label>
-                <span class="customize-hint">Back up your shortcuts to a file, or restore them from one</span>
+                <label data-i18n="shortcutsBackupLabel">Shortcuts</label>
+                <span class="customize-hint" data-i18n="shortcutsBackupHint">Back up your shortcuts to a file, or restore them from one</span>
 
                 <div class="upload-row">
                     <button id="exportShortcutsBtn" class="customize-btn" type="button">
                         <span class="material-icons">download</span>
-                        Export
+                        <span data-i18n="exportShortcutsBtn">Export</span>
                     </button>
 
                     <label for="importShortcutsInput" class="customize-btn">
                         <span class="material-icons">upload</span>
-                        Import
+                        <span data-i18n="importShortcutsBtn">Import</span>
                     </label>
                     <input
                             type="file"
@@ -323,7 +393,7 @@
                 <div class="upload-row">
                     <button id="importFromChromeBtn" class="customize-btn" type="button">
                         <span class="material-icons">travel_explore</span>
-                        Import from Chrome
+                        <span data-i18n="importFromChromeBtn">Import from Chrome</span>
                     </button>
                 </div>
             </div>
@@ -333,7 +403,7 @@
     <dialog id="googleAppsModal" class="customize-modal">
         <div class="customize-content">
             <div class="customize-header">
-                <h3>Google apps</h3>
+                <h3 data-i18n="googleAppsModalTitle">Google apps</h3>
 
                 <button id="closeGoogleAppsBtn" class="icon-btn">
                     <span class="material-icons">close</span>
@@ -370,7 +440,7 @@
                             <label for="googleAppToggle-meet">Meet</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-meet">
-                            <input type="checkbox" id="googleAppToggle-meet" data-google-app="meet" checked>
+                            <input type="checkbox" id="googleAppToggle-meet" data-google-app="meet">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -380,7 +450,7 @@
                             <label for="googleAppToggle-calendar">Calendar</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-calendar">
-                            <input type="checkbox" id="googleAppToggle-calendar" data-google-app="calendar" checked>
+                            <input type="checkbox" id="googleAppToggle-calendar" data-google-app="calendar">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -390,7 +460,7 @@
                             <label for="googleAppToggle-photos">Photos</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-photos">
-                            <input type="checkbox" id="googleAppToggle-photos" data-google-app="photos" checked>
+                            <input type="checkbox" id="googleAppToggle-photos" data-google-app="photos">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -400,7 +470,7 @@
                             <label for="googleAppToggle-maps">Maps</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-maps">
-                            <input type="checkbox" id="googleAppToggle-maps" data-google-app="maps" checked>
+                            <input type="checkbox" id="googleAppToggle-maps" data-google-app="maps">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -410,7 +480,7 @@
                             <label for="googleAppToggle-docs">Docs</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-docs">
-                            <input type="checkbox" id="googleAppToggle-docs" data-google-app="docs" checked>
+                            <input type="checkbox" id="googleAppToggle-docs" data-google-app="docs">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -420,7 +490,7 @@
                             <label for="googleAppToggle-slides">Slides</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-slides">
-                            <input type="checkbox" id="googleAppToggle-slides" data-google-app="slides" checked>
+                            <input type="checkbox" id="googleAppToggle-slides" data-google-app="slides">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -430,7 +500,7 @@
                             <label for="googleAppToggle-sheets">Sheets</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-sheets">
-                            <input type="checkbox" id="googleAppToggle-sheets" data-google-app="sheets" checked>
+                            <input type="checkbox" id="googleAppToggle-sheets" data-google-app="sheets">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -440,7 +510,7 @@
                             <label for="googleAppToggle-keep">Keep</label>
                         </div>
                         <label class="toggle-switch" for="googleAppToggle-keep">
-                            <input type="checkbox" id="googleAppToggle-keep" data-google-app="keep" checked>
+                            <input type="checkbox" id="googleAppToggle-keep" data-google-app="keep">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -561,7 +631,7 @@
     <dialog id="chromeImportModal" class="customize-modal">
         <div class="customize-content">
             <div class="customize-header">
-                <h3>Import from Chrome</h3>
+                <h3 data-i18n="chromeImportModalTitle">Import from Chrome</h3>
 
                 <button id="closeChromeImportBtn" class="icon-btn">
                     <span class="material-icons">close</span>
@@ -569,7 +639,7 @@
             </div>
 
             <div class="customize-section" id="chromeImportIntro">
-                <p class="chrome-import-hint">
+                <p class="chrome-import-hint" data-i18n="chromeImportHint">
                     Select Chrome's <code>Preferences</code> file to import its New Tab shortcuts.
                     Find its location by opening <code>chrome://version</code> in Chrome and looking
                     for "Profile Path".
@@ -577,7 +647,7 @@
 
                 <div class="chrome-import-dropzone" id="chromeImportDropzone" tabindex="0" role="button">
                     <span class="material-icons">upload_file</span>
-                    <span>Drag the <code>Preferences</code> file here, or click to choose it</span>
+                    <span data-i18n="chromeImportDropzone">Drag the <code>Preferences</code> file here, or click to choose it</span>
                 </div>
                 <input type="file" id="chromeImportFileInput" hidden>
             </div>
@@ -586,8 +656,8 @@
                 <span class="chrome-import-summary" id="chromeImportSummary"></span>
                 <div class="chrome-import-list" id="chromeImportList"></div>
                 <div class="modal-actions">
-                    <button type="button" id="chromeImportCancelBtn">Cancel</button>
-                    <button type="button" class="primary" id="chromeImportConfirmBtn">Import</button>
+                    <button type="button" id="chromeImportCancelBtn" data-i18n="cancelBtnLabel">Cancel</button>
+                    <button type="button" class="primary" id="chromeImportConfirmBtn" data-i18n="chromeImportConfirmBtn">Import</button>
                 </div>
             </div>
 
@@ -598,6 +668,7 @@
     </dialog>
 
     <script src="js/prefs.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/favicons.js"></script>
     <script src="js/dragdrop.js"></script>

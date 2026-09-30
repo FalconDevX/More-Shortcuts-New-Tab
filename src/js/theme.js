@@ -34,6 +34,7 @@ function initTheme() {
     }
 
     applyTheme(next);
+    if (typeof reapplyDefaultColorTheme === "function") reapplyDefaultColorTheme();
   });
 
   window
@@ -43,6 +44,7 @@ function initTheme() {
 
       if (mode === "system") {
         applyTheme("system");
+        if (typeof reapplyDefaultColorTheme === "function") reapplyDefaultColorTheme();
       }
     });
 }
